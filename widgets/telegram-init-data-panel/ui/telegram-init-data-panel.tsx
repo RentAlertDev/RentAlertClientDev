@@ -1,11 +1,13 @@
 'use client'
 
+import { getAccessToken } from '@/modules/telegram-auth/model/get-access-token'
 import { useTelegramInitData } from '@/modules/telegram-init-data'
 import { useSubmitTelegramLogin } from '../hooks/use-submit-telegram-login'
 
 export function TelegramInitDataPanel() {
 	const { telegram } = useTelegramInitData()
 	const telegramLogin = useSubmitTelegramLogin(telegram.initData)
+	const accessToken = getAccessToken(telegramLogin.data)
 	const username = telegram.user?.username
 		? `@${telegram.user.username}`
 		: telegram.user?.first_name || 'ЧУВВАААААК'
@@ -18,12 +20,14 @@ export function TelegramInitDataPanel() {
 				</h1>
 
 				<p className='text-sm text-[var(--muted)]'>
-					{telegramLogin.isPending ? 'Auth loading...' : null}
+					{telegramLogin.isPending ? 'Авторизация...' : null}
 					{telegramLogin.isSuccess
-						? `Auth success. Token: ${telegramLogin.data.accessToken.length} chars`
+						? accessToken
+							? `Авторизация успешна. Токен: ${accessToken.length} символов`
+							: 'Авторизация успешна, но токен нет'
 						: null}
 					{telegramLogin.isError
-						? `Auth error: ${telegramLogin.error.message}`
+						? `Ошибка авторизации: ${telegramLogin.error.message}`
 						: null}
 				</p>
 			</div>

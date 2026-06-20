@@ -10,6 +10,9 @@ export interface TelegramLoginRequest {
 }
 
 export interface TelegramLoginResponse {
-	accessToken: string
+	accessToken?: string
+	token?: string
+	accessToke?: string
 	expiresIn?: number
+	[key: string]: unknown
 }
