@@ -3,6 +3,15 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --surface: var(--tg-theme-secondary-bg-color, #f6f8fb);
+  --border: rgba(15, 23, 42, 0.12);
+  --muted: var(--tg-theme-hint-color, #64748b);
+  --success-bg: #ecfdf5;
+  --success-border: rgba(5, 150, 105, 0.24);
+  --success-text: #047857;
+  --danger-bg: #fff1f2;
+  --danger-border: rgba(190, 18, 60, 0.24);
+  --danger-text: #be123c;
 }
 
 @theme inline {
@@ -16,6 +25,14 @@
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    --surface: var(--tg-theme-secondary-bg-color, #151515);
+    --border: rgba(237, 237, 237, 0.16);
+    --success-bg: rgba(5, 150, 105, 0.16);
+    --success-border: rgba(52, 211, 153, 0.32);
+    --success-text: #6ee7b7;
+    --danger-bg: rgba(190, 18, 60, 0.16);
+    --danger-border: rgba(251, 113, 133, 0.32);
+    --danger-text: #fda4af;
   }
 }
 
