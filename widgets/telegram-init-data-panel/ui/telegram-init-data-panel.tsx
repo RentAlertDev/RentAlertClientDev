@@ -1,27 +1,14 @@
 'use client'
 
-import { useEffect } from 'react'
-import { useTelegramLogin } from '@/modules/telegram-auth'
 import { useTelegramInitData } from '@/modules/telegram-init-data'
+import { useSubmitTelegramLogin } from '../hooks/use-submit-telegram-login'
 
 export function TelegramInitDataPanel() {
 	const { telegram } = useTelegramInitData()
-	const telegramLogin = useTelegramLogin()
+	const telegramLogin = useSubmitTelegramLogin(telegram.initData)
 	const username = telegram.user?.username
 		? `@${telegram.user.username}`
-		: telegram.user?.first_name || 'Абобка'
-
-	useEffect(() => {
-		if (
-			!telegram.initData ||
-			telegramLogin.isPending ||
-			telegramLogin.data
-		) {
-			return
-		}
-
-		telegramLogin.mutate(telegram.initData)
-	}, [telegram.initData, telegramLogin])
+		: telegram.user?.first_name || 'ЧУВВАААААК'
 
 	return (
 		<main className='flex min-h-dvh items-center justify-center px-5 text-center'>
