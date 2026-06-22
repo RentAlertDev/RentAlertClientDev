@@ -4,16 +4,17 @@ import type {
 	TelegramLoginRequest,
 	TelegramLoginResponse
 } from '@/modules/telegram-auth'
-
-const BACKEND_BASE_URL =
-	process.env.BACKEND_BASE_URL ?? 'http://193.180.211.20:7777'
+import { getAccessToken } from '@/modules/telegram-auth/model/get-access-token'
+import { AUTH_COOKIE_NAME } from '@/shared/api/auth-session'
+import { getRequiredServerEnv } from '@/shared/config/env.server'
 
 export async function POST(request: NextRequest) {
 	const body = (await request.json()) as TelegramLoginRequest
 
 	try {
+		const backendBaseUrl = getRequiredServerEnv('BACKEND_BASE_URL')
 		const response = await axios.post<TelegramLoginResponse>(
-			`${BACKEND_BASE_URL}/api/v1/auth/login`,
+			`${backendBaseUrl}/api/v1/auth/login`,
 			body,
 			{
 				headers: {
@@ -21,10 +22,22 @@ export async function POST(request: NextRequest) {
 				}
 			}
 		)
-
-		return NextResponse.json(response.data, {
+		const result = NextResponse.json(response.data, {
 			status: response.status
 		})
+		const accessToken = getAccessToken(response.data)
+
+		if (accessToken) {
+			result.cookies.set(AUTH_COOKIE_NAME, accessToken, {
+				httpOnly: true,
+				maxAge: response.data.expiresIn,
+				path: '/',
+				sameSite: 'lax',
+				secure: process.env.NODE_ENV === 'production'
+			})
+		}
+
+		return result
 	} catch (error: unknown) {
 		if (axios.isAxiosError(error)) {
 			return NextResponse.json(
@@ -39,7 +52,10 @@ export async function POST(request: NextRequest) {
 
 		return NextResponse.json(
 			{
-				message: 'Unknown auth proxy error'
+				message:
+					error instanceof Error
+						? error.message
+						: 'Unknown auth proxy error'
 			},
 			{
 				status: 500

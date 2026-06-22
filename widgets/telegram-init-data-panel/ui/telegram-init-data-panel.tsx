@@ -23,8 +23,8 @@ export function TelegramInitDataPanel() {
 					{telegramLogin.isPending ? 'Авторизация...' : null}
 					{telegramLogin.isSuccess
 						? accessToken
-							? `Авторизация успешна. Токен: ${accessToken.length} символов`
-							: 'Авторизация успешна, но токен нет'
+							? `Авторизация успешна. Токен сохранен (${accessToken.length} символов)`
+							: 'Авторизация успешна, но токен не вернулся'
 						: null}
 					{telegramLogin.isError
 						? `Ошибка авторизации: ${telegramLogin.error.message}`
