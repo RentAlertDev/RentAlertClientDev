@@ -17,7 +17,11 @@ export function ApartmentPrice({ price, size = 'base' }: ApartmentPriceProps) {
 	return (
 		<span className={`inline-flex items-baseline gap-1 ${sizeClass}`}>
 			<span>{price.amount}</span>
-			{isByn ? <BynCurrencySymbol /> : <span>$</span>}
+			{isByn ? (
+				<BynCurrencySymbol />
+			) : (
+				<span className='inline-block w-[0.64em] text-center'>$</span>
+			)}
 		</span>
 	)
 }
