@@ -1,6 +1,10 @@
 'use client'
 
-import { ApartmentCard, useApartments } from '@/modules/apartment'
+import {
+	ApartmentCard,
+	formatApartmentsCount,
+	useApartments
+} from '@/modules/apartment'
 import { PaginationControls, usePagination } from '@/modules/pagination'
 import { Card, CardContent } from '@/shared/ui/card'
 import { Loader } from '@/shared/ui/loader'
@@ -21,6 +25,7 @@ export function ApartmentsFeed() {
 		size: APARTMENTS_PAGE_SIZE
 	})
 	const apartments = apartmentsQuery.data?.content ?? []
+	const apartmentsTotal = apartmentsQuery.data?.totalElements ?? 0
 	const { isRendering, visibleApartments } = useStaggeredApartments(
 		apartments,
 		apartmentsQuery.data?.number ?? debouncedPage
@@ -46,12 +51,9 @@ export function ApartmentsFeed() {
 
 					{apartmentsQuery.data ? (
 						<Card className='shrink-0 shadow-none'>
-							<CardContent className='px-3 py-2 text-right'>
-								<div className='text-lg font-semibold'>
-									{apartmentsQuery.data.totalElements}
-								</div>
-								<div className='text-xs text-[var(--muted)]'>
-									всего
+							<CardContent className='px-3 py-2.5 text-right'>
+								<div className='text-sm font-semibold leading-none'>
+									{formatApartmentsCount(apartmentsTotal)}
 								</div>
 							</CardContent>
 						</Card>

@@ -23,7 +23,7 @@ export function ApartmentCard({ apartment }: ApartmentCardProps) {
 
 	return (
 		<Card as='article' className='overflow-hidden'>
-			<div className='relative aspect-[16/10] overflow-hidden bg-[color-mix(in_srgb,var(--foreground)_8%,var(--surface))]'>
+			<div className='relative aspect-[16/10] overflow-hidden bg-[var(--image-surface)]'>
 				<Image
 					alt={apartment.title}
 					className='h-full w-full object-cover'
@@ -38,12 +38,12 @@ export function ApartmentCard({ apartment }: ApartmentCardProps) {
 
 				<div className='absolute right-3 top-3 flex gap-2'>
 					<IconButton
-						className='bg-black/45 text-white backdrop-blur hover:bg-black/60'
 						label={
 							apartment.isFavorite
 								? 'Убрать из избранного'
 								: 'Добавить в избранное'
 						}
+						variant='overlay'
 					>
 						<Heart
 							aria-hidden
@@ -53,7 +53,7 @@ export function ApartmentCard({ apartment }: ApartmentCardProps) {
 							}
 						/>
 					</IconButton>
-					<IconButton label='Удалить квартиру' variant='danger'>
+					<IconButton label='Удалить квартиру' variant='overlayDanger'>
 						<Trash2 aria-hidden className='size-5' />
 					</IconButton>
 				</div>

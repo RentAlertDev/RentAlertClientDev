@@ -9,7 +9,7 @@ export function Card({ as: Component = 'div', className, ...props }: CardProps) 
 	return (
 		<Component
 			className={cn(
-				'rounded-lg border border-[var(--border)] bg-[var(--surface)] text-[var(--foreground)] shadow-[0_14px_40px_rgba(15,23,42,0.08)]',
+				'rounded-lg border border-[var(--card-border)] bg-[var(--card)] text-[var(--foreground)] shadow-[0_14px_40px_var(--card-shadow)]',
 				className
 			)}
 			{...props}

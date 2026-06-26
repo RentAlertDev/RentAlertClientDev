@@ -1,11 +1,26 @@
-export function BynCurrencySymbol() {
+import type { SVGProps } from 'react'
+import { cn } from '@/shared/lib/utils'
+
+interface BynCurrencySymbolProps
+	extends Omit<SVGProps<SVGSVGElement>, 'className'> {
+	className?: string
+}
+
+export function BynCurrencySymbol({
+	className,
+	...props
+}: BynCurrencySymbolProps) {
 	return (
 		<svg
 			aria-label='белорусский рубль'
-			className='h-[1.04em] w-[1.04em] translate-y-[0.13em]'
+			className={cn(
+				'h-[0.9em] w-[0.9em] shrink-0 translate-y-[0.08em]',
+				className
+			)}
 			role='img'
 			viewBox='0 0 500 500'
 			xmlns='http://www.w3.org/2000/svg'
+			{...props}
 		>
 			<g transform='translate(0 500) scale(0.1 -0.1)'>
 				<path

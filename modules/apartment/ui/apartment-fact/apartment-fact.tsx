@@ -7,7 +7,7 @@ interface ApartmentFactProps {
 
 export function ApartmentFact({ label, value }: ApartmentFactProps) {
 	return (
-		<div className='rounded-md border border-[var(--border)] bg-[color-mix(in_srgb,var(--background)_42%,var(--surface))] p-3'>
+		<div className='rounded-md border border-[var(--card-border)] bg-[var(--card-muted)] p-3'>
 			<div className='mb-1 flex items-center gap-1.5 text-xs uppercase text-[var(--muted)]'>
 				<Building2 aria-hidden className='size-3.5' />
 				{label}
