@@ -1,0 +1,2 @@
+export const PAGE_CHANGE_DEBOUNCE_MS = 300
+export const PAGE_CHANGE_LOCK_MS = 500

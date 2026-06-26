@@ -1,5 +1,10 @@
-import { TelegramInitDataPanel } from "@/widgets/telegram-init-data-panel";
+import { ApartmentsFeed } from '@/widgets/apartments-feed'
+import { TelegramAuthGate } from '@/widgets/telegram-auth-gate'
 
 export default function Home() {
-  return <TelegramInitDataPanel />;
+	return (
+		<TelegramAuthGate>
+			<ApartmentsFeed />
+		</TelegramAuthGate>
+	)
 }
