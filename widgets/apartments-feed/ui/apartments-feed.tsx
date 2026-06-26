@@ -49,7 +49,7 @@ export function ApartmentsFeed() {
 						</h1>
 					</div>
 
-					{apartmentsQuery.data ? (
+					{/* {apartmentsQuery.data ? (
 						<Card className='shrink-0 shadow-none'>
 							<CardContent className='px-3 py-2.5 text-right'>
 								<div className='text-sm font-semibold leading-none'>
@@ -57,7 +57,7 @@ export function ApartmentsFeed() {
 								</div>
 							</CardContent>
 						</Card>
-					) : null}
+					) : null} */}
 				</header>
 
 				{apartmentsQuery.isError ? (
