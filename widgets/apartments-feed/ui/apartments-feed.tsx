@@ -1,10 +1,6 @@
 'use client'
 
-import {
-	ApartmentCard,
-	formatApartmentsCount,
-	useApartments
-} from '@/modules/apartment'
+import { ApartmentCard, useApartments } from '@/modules/apartment'
 import { PaginationControls, usePagination } from '@/modules/pagination'
 import { Card, CardContent } from '@/shared/ui/card'
 import { Loader } from '@/shared/ui/loader'
@@ -16,6 +12,7 @@ export function ApartmentsFeed() {
 	const {
 		debouncedPage,
 		goToNextPage,
+		goToPage,
 		goToPreviousPage,
 		isPageLocked,
 		page
@@ -25,7 +22,6 @@ export function ApartmentsFeed() {
 		size: APARTMENTS_PAGE_SIZE
 	})
 	const apartments = apartmentsQuery.data?.content ?? []
-	const apartmentsTotal = apartmentsQuery.data?.totalElements ?? 0
 	const { isRendering, visibleApartments } = useStaggeredApartments(
 		apartments,
 		apartmentsQuery.data?.number ?? debouncedPage
@@ -93,6 +89,9 @@ export function ApartmentsFeed() {
 					isDisabled={isPaginationDisabled}
 					isLastPage={apartmentsQuery.data?.last}
 					onNextPage={() => goToNextPage(apartmentsQuery.data?.last)}
+					onPageChange={nextPage =>
+						goToPage(nextPage, apartmentsQuery.data?.totalPages)
+					}
 					onPreviousPage={goToPreviousPage}
 					totalPages={apartmentsQuery.data?.totalPages}
 				/>
