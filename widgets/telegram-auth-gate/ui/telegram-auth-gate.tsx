@@ -70,7 +70,8 @@ export function TelegramAuthGate({ children }: TelegramAuthGateProps) {
 
 					{isAuthError ? (
 						<div className='rounded-md border border-[var(--danger-border)] bg-[var(--danger-bg)] px-4 py-3 text-sm text-[var(--danger-text)]'>
-							Не получилось авторизоваться. Открой приложение заново.
+							Не получилось авторизоваться. Открой приложение
+							заново.
 						</div>
 					) : null}
 				</CardContent>
