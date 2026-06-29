@@ -25,6 +25,15 @@ export function usePagination() {
 	const [isPageLocked, setIsPageLocked] = useState(false)
 	const debouncedPage = useDebouncedValue(page, PAGE_CHANGE_DEBOUNCE_MS)
 
+	function scrollToPageStart() {
+		window.requestAnimationFrame(() => {
+			window.scrollTo({
+				top: 0,
+				behavior: 'smooth'
+			})
+		})
+	}
+
 	function lockPageChange() {
 		setIsPageLocked(true)
 
@@ -33,27 +42,39 @@ export function usePagination() {
 		}, PAGE_CHANGE_LOCK_MS)
 	}
 
-	function goToPreviousPage() {
-		if (isPageLocked) {
+	function changePage(nextPage: number) {
+		if (nextPage === page || isPageLocked) {
 			return
 		}
 
-		setPage(currentPage => Math.max(0, currentPage - 1))
+		setPage(nextPage)
+		scrollToPageStart()
 		lockPageChange()
 	}
 
+	function goToPreviousPage() {
+		changePage(Math.max(0, page - 1))
+	}
+
 	function goToNextPage(lastPage?: boolean) {
-		if (lastPage || isPageLocked) {
+		if (lastPage) {
 			return
 		}
 
-		setPage(currentPage => currentPage + 1)
-		lockPageChange()
+		changePage(page + 1)
+	}
+
+	function goToPage(nextPage: number, totalPages?: number) {
+		const lastPage = totalPages ? totalPages - 1 : nextPage
+		const boundedPage = Math.min(Math.max(0, nextPage), lastPage)
+
+		changePage(boundedPage)
 	}
 
 	return {
 		debouncedPage,
 		goToNextPage,
+		goToPage,
 		goToPreviousPage,
 		isPageLocked,
 		page
