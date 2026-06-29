@@ -1,4 +1,4 @@
-import { Bot, Clock3, ShieldCheck, User } from 'lucide-react'
+import { User } from 'lucide-react'
 import { Card, CardContent } from '@/shared/ui/card'
 import {
 	formatBotStatus,
@@ -44,34 +44,6 @@ export function ProfileCard({ profile }: ProfileCardProps) {
 						label='Последний вход'
 						value={formatProfileDate(profile.lastLogin)}
 					/>
-				</div>
-
-				<div className='grid grid-cols-3 gap-2 text-center'>
-					<div className='rounded-md bg-[var(--card-muted)] p-3'>
-						<Bot
-							aria-hidden
-							className='mx-auto mb-1 size-5 text-[var(--muted)]'
-						/>
-						<div className='text-xs font-semibold'>
-							{profile.botStatus}
-						</div>
-					</div>
-					<div className='rounded-md bg-[var(--card-muted)] p-3'>
-						<ShieldCheck
-							aria-hidden
-							className='mx-auto mb-1 size-5 text-[var(--muted)]'
-						/>
-						<div className='text-xs font-semibold'>
-							{profile.role}
-						</div>
-					</div>
-					<div className='rounded-md bg-[var(--card-muted)] p-3'>
-						<Clock3
-							aria-hidden
-							className='mx-auto mb-1 size-5 text-[var(--muted)]'
-						/>
-						<div className='text-xs font-semibold'>Аккаунт</div>
-					</div>
 				</div>
 			</CardContent>
 		</Card>
