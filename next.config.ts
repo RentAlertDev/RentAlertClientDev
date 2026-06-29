@@ -13,6 +13,10 @@ const nextConfig: NextConfig = {
 			},
 			{
 				protocol: 'https',
+				hostname: 'rms8.kufar.by'
+			},
+			{
+				protocol: 'https',
 				hostname: 'i.redd.it'
 			}
 		]
