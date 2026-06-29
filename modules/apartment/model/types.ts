@@ -50,16 +50,24 @@ export interface ApartmentApiItem {
 	photos?: string[]
 }
 
-export interface ApartmentsPageResponse {
-	content: ApartmentApiItem[]
-	empty: boolean
-	first: boolean
-	last: boolean
-	number: number
-	numberOfElements: number
+export interface ApartmentsPageMetaResponse {
 	size: number
+	number: number
 	totalElements: number
 	totalPages: number
+}
+
+export interface ApartmentsPageResponse {
+	content: ApartmentApiItem[]
+	page?: ApartmentsPageMetaResponse
+	empty?: boolean
+	first?: boolean
+	last?: boolean
+	number?: number
+	numberOfElements?: number
+	size?: number
+	totalElements?: number
+	totalPages?: number
 }
 
 export interface ApartmentsPage {

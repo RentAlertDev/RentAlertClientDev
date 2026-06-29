@@ -70,15 +70,25 @@ export function mapApartmentFromApi(apartment: ApartmentApiItem): Apartment {
 export function mapApartmentsPageFromApi(
 	response: ApartmentsPageResponse
 ): ApartmentsPage {
+	const content = response.content.map(mapApartmentFromApi)
+	const number = response.page?.number ?? response.number ?? 0
+	const size = response.page?.size ?? response.size ?? content.length
+	const totalElements =
+		response.page?.totalElements ?? response.totalElements ?? content.length
+	const totalPages =
+		response.page?.totalPages ??
+		response.totalPages ??
+		(size > 0 ? Math.ceil(totalElements / size) : 0)
+
 	return {
-		content: response.content.map(mapApartmentFromApi),
-		empty: response.empty,
-		first: response.first,
-		last: response.last,
-		number: response.number,
-		numberOfElements: response.numberOfElements,
-		size: response.size,
-		totalElements: response.totalElements,
-		totalPages: response.totalPages
+		content,
+		empty: response.empty ?? content.length === 0,
+		first: response.first ?? number === 0,
+		last: response.last ?? number >= totalPages - 1,
+		number,
+		numberOfElements: response.numberOfElements ?? content.length,
+		size,
+		totalElements,
+		totalPages
 	}
 }
