@@ -1,7 +1,11 @@
 'use client'
 
+import { useState } from 'react'
+import { SlidersHorizontal } from 'lucide-react'
 import { ApartmentCard, useApartments } from '@/modules/apartment'
 import { PaginationControls, usePagination } from '@/modules/pagination'
+import { UserFilterFormModal } from '@/modules/user-filter'
+import { Button } from '@/shared/ui/button'
 import { Card, CardContent } from '@/shared/ui/card'
 import { Loader } from '@/shared/ui/loader'
 import { useStaggeredApartments } from '../hooks/use-staggered-apartments'
@@ -9,6 +13,8 @@ import { useStaggeredApartments } from '../hooks/use-staggered-apartments'
 const APARTMENTS_PAGE_SIZE = 10
 
 export function ApartmentsFeed() {
+	const [isFilterModalOpen, setIsFilterModalOpen] = useState(false)
+	const [filterMessage, setFilterMessage] = useState<string | null>(null)
 	const {
 		debouncedPage,
 		goToNextPage,
@@ -35,25 +41,31 @@ export function ApartmentsFeed() {
 	return (
 		<main className='min-h-dvh bg-[var(--background)] px-4 py-5 text-[var(--foreground)] sm:px-6'>
 			<div className='mx-auto flex w-full max-w-3xl flex-col gap-5 pb-[calc(24px+env(safe-area-inset-bottom))]'>
-				<header className='flex items-end justify-between gap-4'>
-					<div>
-						<div className='text-sm font-medium text-[var(--muted)]'>
-							RentAlert
+				<header className='flex flex-col gap-4'>
+					<div className='flex items-end justify-between gap-4'>
+						<div>
+							<div className='text-sm font-medium text-[var(--muted)]'>
+								RentAlert
+							</div>
+							<h1 className='mt-2 text-3xl font-semibold tracking-normal'>
+								Квартиры
+							</h1>
 						</div>
-						<h1 className='mt-2 text-3xl font-semibold tracking-normal'>
-							Квартиры
-						</h1>
 					</div>
 
-					{/* {apartmentsQuery.data ? (
-						<Card className='shrink-0 shadow-none'>
-							<CardContent className='px-3 py-2.5 text-right'>
-								<div className='text-sm font-semibold leading-none'>
-									{formatApartmentsCount(apartmentsTotal)}
-								</div>
-							</CardContent>
-						</Card>
-					) : null} */}
+					<Button
+						className='w-full justify-center sm:w-fit'
+						onClick={() => setIsFilterModalOpen(true)}
+					>
+						<SlidersHorizontal aria-hidden className='size-4' />
+						Настроить поиск
+					</Button>
+
+					{filterMessage ? (
+						<div className='rounded-md border border-[var(--success-border)] bg-[var(--success-bg)] px-3 py-2 text-sm font-semibold text-[var(--success-text)]'>
+							{filterMessage}
+						</div>
+					) : null}
 				</header>
 
 				{apartmentsQuery.isError ? (
@@ -96,6 +108,14 @@ export function ApartmentsFeed() {
 					totalPages={apartmentsQuery.data?.totalPages}
 				/>
 			</div>
+
+			{isFilterModalOpen ? (
+				<UserFilterFormModal
+					isOpen={isFilterModalOpen}
+					onClose={() => setIsFilterModalOpen(false)}
+					onSuccess={message => setFilterMessage(message)}
+				/>
+			) : null}
 		</main>
 	)
 }
