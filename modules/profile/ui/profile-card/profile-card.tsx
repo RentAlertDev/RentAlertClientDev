@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import { User } from 'lucide-react'
 import { Card, CardContent } from '@/shared/ui/card'
 import {
@@ -17,8 +18,19 @@ export function ProfileCard({ profile }: ProfileCardProps) {
 		<Card className='shadow-none'>
 			<CardContent className='space-y-5'>
 				<div className='flex items-start gap-4'>
-					<div className='grid size-14 shrink-0 place-items-center rounded-lg bg-[var(--primary)] text-[var(--primary-foreground)]'>
-						<User aria-hidden className='size-7' />
+					<div className='grid size-14 shrink-0 place-items-center overflow-hidden rounded-lg bg-[var(--primary)] text-[var(--primary-foreground)]'>
+						{profile.photoUrl ? (
+							<Image
+								alt={`@${profile.username}`}
+								className='h-full w-full object-cover'
+								height={56}
+								src={profile.photoUrl}
+								unoptimized
+								width={56}
+							/>
+						) : (
+							<User aria-hidden className='size-7' />
+						)}
 					</div>
 					<div className='min-w-0'>
 						<div className='text-sm font-medium text-[var(--muted)]'>

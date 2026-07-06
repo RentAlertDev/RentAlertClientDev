@@ -17,7 +17,15 @@ const nextConfig: NextConfig = {
 			},
 			{
 				protocol: 'https',
+				hostname: 'imgproxy.onliner.by'
+			},
+			{
+				protocol: 'https',
 				hostname: 'i.redd.it'
+			},
+			{
+				protocol: 'https',
+				hostname: 't.me'
 			}
 		]
 	}
