@@ -1,11 +1,15 @@
 'use client'
 
 import type { ChangeEvent } from 'react'
+import type {
+	FieldErrors,
+	UseFormRegister
+} from 'react-hook-form'
 import type { UserFilterFormValues } from '../model/types'
 
 interface UserFilterFormFieldsProps {
-	values: UserFilterFormValues
-	onChange: (values: UserFilterFormValues) => void
+	errors: FieldErrors<UserFilterFormValues>
+	register: UseFormRegister<UserFilterFormValues>
 }
 
 interface NumberFieldConfig {
@@ -48,35 +52,52 @@ const fields: NumberFieldConfig[] = [
 ]
 
 export function UserFilterFormFields({
-	values,
-	onChange
+	errors,
+	register
 }: UserFilterFormFieldsProps) {
-	function handleChange(
-		key: keyof UserFilterFormValues,
-		event: ChangeEvent<HTMLInputElement>
-	) {
-		onChange({
-			...values,
-			[key]: event.target.value
-		})
-	}
-
 	return (
 		<div className='grid grid-cols-2 gap-3'>
 			{fields.map(field => (
-				<label className='space-y-2' key={field.key}>
-					<span className='text-sm font-semibold'>{field.label}</span>
-					<input
-						className='h-11 w-full rounded-md border border-[var(--card-border)] bg-[var(--card-muted)] px-3 text-sm outline-none transition focus:border-[var(--primary)]'
-						inputMode='numeric'
-						min={0}
-						onChange={event => handleChange(field.key, event)}
-						placeholder={field.placeholder}
-						type='number'
-						value={values[field.key]}
-					/>
-				</label>
+				<NumberField
+					error={errors[field.key]?.message}
+					field={field}
+					key={field.key}
+					register={register}
+				/>
 			))}
 		</div>
+	)
+}
+
+interface NumberFieldProps {
+	error?: string
+	field: NumberFieldConfig
+	register: UseFormRegister<UserFilterFormValues>
+}
+
+function NumberField({ error, field, register }: NumberFieldProps) {
+	function handleChange(event: ChangeEvent<HTMLInputElement>) {
+		event.currentTarget.value = event.currentTarget.value.replace(/\D/g, '')
+	}
+
+	return (
+		<label className='space-y-2'>
+			<span className='text-sm font-semibold'>{field.label}</span>
+			<input
+				aria-invalid={Boolean(error)}
+				className='h-11 w-full rounded-md border border-[var(--card-border)] bg-[var(--card-muted)] px-3 text-sm outline-none transition focus:border-[var(--primary)] aria-invalid:border-[var(--danger-border)]'
+				inputMode='numeric'
+				placeholder={field.placeholder}
+				type='text'
+				{...register(field.key, {
+					onChange: handleChange
+				})}
+			/>
+			{error ? (
+				<span className='block text-xs font-medium text-[var(--danger-text)]'>
+					{error}
+				</span>
+			) : null}
+		</label>
 	)
 }
