@@ -1,7 +1,9 @@
 'use client'
 
-import { useState, type FormEvent } from 'react'
+import { useEffect } from 'react'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { X } from 'lucide-react'
+import { useForm } from 'react-hook-form'
 import { Button } from '@/shared/ui/button'
 import { IconButton } from '@/shared/ui/icon-button'
 import {
@@ -9,6 +11,7 @@ import {
 	mapFormValuesToRequest
 } from '../model/formatters'
 import type { UserFilter, UserFilterFormValues } from '../model/types'
+import { userFilterFormSchema } from '../model/validation'
 import { useCreateUserFilterMutation } from '../hooks/use-create-user-filter-mutation'
 import { useSetUserFilterActivationMutation } from '../hooks/use-set-user-filter-activation-mutation'
 import { useUpdateUserFilterMutation } from '../hooks/use-update-user-filter-mutation'
@@ -18,6 +21,7 @@ interface UserFilterFormModalProps {
 	filter?: UserFilter | null
 	isOpen: boolean
 	onClose: () => void
+	onError?: (message: string) => void
 	onSuccess?: (message: string) => void
 }
 
@@ -33,12 +37,14 @@ export function UserFilterFormModal({
 	filter,
 	isOpen,
 	onClose,
+	onError,
 	onSuccess
 }: UserFilterFormModalProps) {
-	const [values, setValues] = useState<UserFilterFormValues>(
-		mapFilterToFormValues(filter ?? undefined)
-	)
-	const [errorMessage, setErrorMessage] = useState<string | null>(null)
+	const form = useForm<UserFilterFormValues>({
+		defaultValues: mapFilterToFormValues(filter ?? undefined),
+		mode: 'onSubmit',
+		resolver: zodResolver(userFilterFormSchema)
+	})
 	const createFilterMutation = useCreateUserFilterMutation()
 	const updateFilterMutation = useUpdateUserFilterMutation()
 	const activationMutation = useSetUserFilterActivationMutation()
@@ -48,11 +54,28 @@ export function UserFilterFormModal({
 		updateFilterMutation.isPending ||
 		activationMutation.isPending
 
+	useEffect(() => {
+		if (!isOpen) {
+			return
+		}
+
+		const bodyOverflow = document.body.style.overflow
+		const htmlOverflow = document.documentElement.style.overflow
+
+		document.body.style.overflow = 'hidden'
+		document.documentElement.style.overflow = 'hidden'
+
+		return () => {
+			document.body.style.overflow = bodyOverflow
+			document.documentElement.style.overflow = htmlOverflow
+		}
+	}, [isOpen])
+
 	if (!isOpen) {
 		return null
 	}
 
-	async function saveFilter() {
+	async function saveFilter(values: UserFilterFormValues) {
 		const request = mapFormValuesToRequest(values)
 
 		if (filter) {
@@ -65,24 +88,19 @@ export function UserFilterFormModal({
 		return createFilterMutation.mutateAsync(request)
 	}
 
-	async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-		event.preventDefault()
-		setErrorMessage(null)
-
+	async function handleSave(values: UserFilterFormValues) {
 		try {
-			await saveFilter()
+			await saveFilter(values)
 			onSuccess?.(isEditMode ? 'Фильтр сохранен' : 'Фильтр создан')
 			onClose()
 		} catch (error) {
-			setErrorMessage(getErrorMessage(error))
+			onError?.(getErrorMessage(error))
 		}
 	}
 
-	async function handleSaveAndApply() {
-		setErrorMessage(null)
-
+	async function handleSaveAndApply(values: UserFilterFormValues) {
 		try {
-			const savedFilter = await saveFilter()
+			const savedFilter = await saveFilter(values)
 
 			try {
 				await activationMutation.mutateAsync({
@@ -92,27 +110,32 @@ export function UserFilterFormModal({
 				onSuccess?.('Фильтр применен')
 				onClose()
 			} catch {
-				setErrorMessage(
+				onError?.(
 					'Фильтр сохранен, но не удалось его применить'
 				)
 			}
 		} catch (error) {
-			setErrorMessage(getErrorMessage(error))
+			onError?.(getErrorMessage(error))
 		}
 	}
 
 	return (
 		<div
-			className='fixed inset-0 z-[80] flex items-end justify-center bg-black/55 px-3 pb-3 pt-10 backdrop-blur-sm sm:items-center sm:p-6'
-			onMouseDown={event => {
-				if (event.target === event.currentTarget && !isSubmitting) {
-					onClose()
+			className='fixed inset-0 z-[80] flex touch-none items-end justify-center overflow-hidden bg-black/55 px-3 pb-3 pt-10 backdrop-blur-sm sm:items-center sm:p-6'
+			onTouchMove={event => {
+				if (event.target === event.currentTarget) {
+					event.preventDefault()
+				}
+			}}
+			onWheel={event => {
+				if (event.target === event.currentTarget) {
+					event.preventDefault()
 				}
 			}}
 		>
 			<form
-				className='max-h-[calc(100dvh-32px)] w-full max-w-lg overflow-hidden rounded-lg border border-[var(--card-border)] bg-[var(--card)] text-[var(--foreground)] shadow-[0_24px_80px_rgba(0,0,0,0.35)]'
-				onSubmit={handleSubmit}
+				className='max-h-[calc(100dvh-32px)] w-full max-w-lg touch-auto overflow-hidden rounded-lg border border-[var(--card-border)] bg-[var(--card)] text-[var(--foreground)] shadow-[0_24px_80px_rgba(0,0,0,0.35)]'
+				onSubmit={form.handleSubmit(handleSave)}
 			>
 				<div className='flex items-start justify-between gap-4 border-b border-[var(--card-border)] p-4'>
 					<div>
@@ -134,17 +157,11 @@ export function UserFilterFormModal({
 					</IconButton>
 				</div>
 
-				<div className='max-h-[calc(100dvh-220px)] overflow-y-auto p-4'>
+				<div className='max-h-[calc(100dvh-220px)] overflow-y-auto overscroll-contain p-4'>
 					<UserFilterFormFields
-						onChange={setValues}
-						values={values}
+						errors={form.formState.errors}
+						register={form.register}
 					/>
-
-					{errorMessage ? (
-						<div className='mt-4 rounded-md border border-[var(--danger-border)] bg-[var(--danger-bg)] px-3 py-2 text-sm text-[var(--danger-text)]'>
-							{errorMessage}
-						</div>
-					) : null}
 				</div>
 
 				<div className='grid gap-2 border-t border-[var(--card-border)] p-4 sm:grid-cols-2'>
@@ -153,7 +170,7 @@ export function UserFilterFormModal({
 					</Button>
 					<Button
 						disabled={isSubmitting}
-						onClick={handleSaveAndApply}
+						onClick={form.handleSubmit(handleSaveAndApply)}
 						type='button'
 					>
 						Сохранить и применить

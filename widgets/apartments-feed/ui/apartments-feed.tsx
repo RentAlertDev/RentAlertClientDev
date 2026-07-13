@@ -8,13 +8,13 @@ import { UserFilterFormModal } from '@/modules/user-filter'
 import { Button } from '@/shared/ui/button'
 import { Card, CardContent } from '@/shared/ui/card'
 import { Loader } from '@/shared/ui/loader'
+import { toast } from '@/shared/ui/toaster'
 import { useStaggeredApartments } from '../hooks/use-staggered-apartments'
 
 const APARTMENTS_PAGE_SIZE = 10
 
 export function ApartmentsFeed() {
 	const [isFilterModalOpen, setIsFilterModalOpen] = useState(false)
-	const [filterMessage, setFilterMessage] = useState<string | null>(null)
 	const {
 		debouncedPage,
 		goToNextPage,
@@ -60,12 +60,6 @@ export function ApartmentsFeed() {
 						<SlidersHorizontal aria-hidden className='size-4' />
 						Настроить поиск
 					</Button>
-
-					{filterMessage ? (
-						<div className='rounded-md border border-[var(--success-border)] bg-[var(--success-bg)] px-3 py-2 text-sm font-semibold text-[var(--success-text)]'>
-							{filterMessage}
-						</div>
-					) : null}
 				</header>
 
 				{apartmentsQuery.isError ? (
@@ -113,7 +107,8 @@ export function ApartmentsFeed() {
 				<UserFilterFormModal
 					isOpen={isFilterModalOpen}
 					onClose={() => setIsFilterModalOpen(false)}
-					onSuccess={message => setFilterMessage(message)}
+					onError={message => toast.error(message)}
+					onSuccess={message => toast.success(message)}
 				/>
 			) : null}
 		</main>

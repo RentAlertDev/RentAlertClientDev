@@ -3,16 +3,20 @@
 import { useMemo, useState } from 'react'
 import { Card, CardContent } from '@/shared/ui/card'
 import { ConfirmDialog } from '@/shared/ui/confirm-dialog'
-import { Loader } from '@/shared/ui/loader'
+import { toast } from '@/shared/ui/toaster'
 import {
 	UserFilterCard,
 	UserFilterEmptyState,
 	UserFilterFormModal,
 	useDeleteUserFilterMutation,
 	useSetUserFilterActivationMutation,
-	useUserFiltersQuery,
 	type UserFilter
 } from '@/modules/user-filter'
+
+interface ProfileFiltersProps {
+	filters: UserFilter[]
+	isError?: boolean
+}
 
 function getErrorMessage(error: unknown) {
 	if (error instanceof Error) {
@@ -22,38 +26,37 @@ function getErrorMessage(error: unknown) {
 	return 'Не удалось выполнить действие'
 }
 
-export function ProfileFilters() {
+export function ProfileFilters({
+	filters: initialFilters,
+	isError
+}: ProfileFiltersProps) {
 	const [editingFilter, setEditingFilter] = useState<UserFilter | null>(null)
 	const [deletingFilter, setDeletingFilter] = useState<UserFilter | null>(
 		null
 	)
-	const [message, setMessage] = useState<string | null>(null)
-	const [errorMessage, setErrorMessage] = useState<string | null>(null)
-	const userFiltersQuery = useUserFiltersQuery()
 	const activationMutation = useSetUserFilterActivationMutation()
 	const deleteMutation = useDeleteUserFilterMutation()
 	const isActionPending =
 		activationMutation.isPending || deleteMutation.isPending
 	const filters = useMemo(
 		() =>
-			[...(userFiltersQuery.data ?? [])].sort(
+			[...initialFilters].sort(
 				(firstFilter, secondFilter) => firstFilter.id - secondFilter.id
 			),
-		[userFiltersQuery.data]
+		[initialFilters]
 	)
 
 	async function handleToggleActivation(filter: UserFilter) {
-		setMessage(null)
-		setErrorMessage(null)
-
 		try {
 			await activationMutation.mutateAsync({
 				active: !filter.active,
 				filterId: filter.id
 			})
-			setMessage(filter.active ? 'Фильтр отключен' : 'Фильтр применен')
+			toast.success(
+				filter.active ? 'Фильтр отключен' : 'Фильтр применен'
+			)
 		} catch (error) {
-			setErrorMessage(getErrorMessage(error))
+			toast.error(getErrorMessage(error))
 		}
 	}
 
@@ -62,15 +65,12 @@ export function ProfileFilters() {
 			return
 		}
 
-		setMessage(null)
-		setErrorMessage(null)
-
 		try {
 			await deleteMutation.mutateAsync(deletingFilter.id)
-			setMessage('Фильтр удален')
+			toast.success('Фильтр удален')
 			setDeletingFilter(null)
 		} catch {
-			setErrorMessage(
+			toast.error(
 				deletingFilter.active
 					? 'Активный фильтр нельзя удалить. Сначала отключите его.'
 					: 'Не удалось удалить фильтр'
@@ -97,25 +97,7 @@ export function ProfileFilters() {
 			</div>
 
 			<div className='space-y-3'>
-				{message ? (
-					<div className='rounded-md border border-[var(--success-border)] bg-[var(--success-bg)] px-3 py-2 text-sm font-semibold text-[var(--success-text)]'>
-						{message}
-					</div>
-				) : null}
-
-				{errorMessage ? (
-					<div className='rounded-md border border-[var(--danger-border)] bg-[var(--danger-bg)] px-3 py-2 text-sm font-semibold text-[var(--danger-text)]'>
-						{errorMessage}
-					</div>
-				) : null}
-
-				{userFiltersQuery.isPending ? (
-					<div className='grid min-h-32 place-items-center rounded-md bg-[var(--card-muted)]'>
-						<Loader label='Загружаем фильтры' />
-					</div>
-				) : null}
-
-				{userFiltersQuery.isError ? (
+				{isError ? (
 					<Card className='border-[var(--danger-border)] bg-[var(--danger-bg)] text-[var(--danger-text)] shadow-none'>
 						<CardContent>
 							<div className='font-semibold'>
@@ -128,7 +110,7 @@ export function ProfileFilters() {
 					</Card>
 				) : null}
 
-				{!userFiltersQuery.isPending && filters.length === 0 ? (
+				{!isError && filters.length === 0 ? (
 					<UserFilterEmptyState />
 				) : null}
 
@@ -153,7 +135,8 @@ export function ProfileFilters() {
 					filter={editingFilter}
 					isOpen={Boolean(editingFilter)}
 					onClose={() => setEditingFilter(null)}
-					onSuccess={setMessage}
+					onError={message => toast.error(message)}
+					onSuccess={message => toast.success(message)}
 				/>
 			) : null}
 
