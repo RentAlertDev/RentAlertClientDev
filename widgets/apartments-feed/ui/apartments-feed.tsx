@@ -3,6 +3,12 @@
 import { useState } from 'react'
 import { SlidersHorizontal } from 'lucide-react'
 import { ApartmentCard, useApartments } from '@/modules/apartment'
+import {
+	DEFAULT_FAVORITE_STATUS_ID,
+	FAVORITES_PAGE_SIZE,
+	useAddFavoriteMutation,
+	useFavoritesQuery
+} from '@/modules/favorite'
 import { PaginationControls, usePagination } from '@/modules/pagination'
 import { UserFilterFormModal } from '@/modules/user-filter'
 import { Button } from '@/shared/ui/button'
@@ -27,6 +33,28 @@ export function ApartmentsFeed() {
 		page: debouncedPage,
 		size: APARTMENTS_PAGE_SIZE
 	})
+	const favoritesQuery = useFavoritesQuery({
+		page: 0,
+		size: FAVORITES_PAGE_SIZE,
+		sort: ['createdAt,desc']
+	})
+	const addFavoriteMutation = useAddFavoriteMutation()
+	const favoriteIds = new Set(
+		favoritesQuery.data?.content.map(item => item.listing.id) ?? []
+	)
+	const addToFavorites = (listingId: number) => {
+		addFavoriteMutation.mutate(
+			{ listingId, listingStatusId: DEFAULT_FAVORITE_STATUS_ID },
+			{
+				onSuccess: () =>
+					toast.success('Квартира добавлена в избранное'),
+				onError: () =>
+					toast.error(
+						'Не удалось добавить квартиру. Возможно, она уже сохранена или достигнут лимит 30 объявлений.'
+					)
+			}
+		)
+	}
 	const apartments = apartmentsQuery.data?.content ?? []
 	const { isRendering, visibleApartments } = useStaggeredApartments(
 		apartments,
@@ -83,7 +111,16 @@ export function ApartmentsFeed() {
 							{visibleApartments.map(apartment => (
 								<ApartmentCard
 									apartment={apartment}
+									isFavorite={favoriteIds.has(apartment.id)}
+									isFavoritePending={
+										addFavoriteMutation.isPending &&
+										addFavoriteMutation.variables
+											?.listingId === apartment.id
+									}
 									key={apartment.id}
+									onAddFavorite={() =>
+										addToFavorites(apartment.id)
+									}
 								/>
 							))}
 						</div>
