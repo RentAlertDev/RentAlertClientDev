@@ -1,0 +1,2 @@
+import { Skeleton } from '@/shared/ui/skeleton'
+export function FavoritesSkeleton() { return <div className='grid gap-4'>{[0,1].map(item => <div className='overflow-hidden rounded-lg border border-[var(--card-border)] bg-[var(--card)]' key={item}><Skeleton className='aspect-[16/9] w-full rounded-none' /><div className='space-y-3 p-4'><Skeleton className='h-6 w-2/3' /><Skeleton className='h-4 w-1/2' /><Skeleton className='h-20 w-full' /></div></div>)}</div> }

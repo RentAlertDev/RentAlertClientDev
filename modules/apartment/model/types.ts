@@ -15,6 +15,7 @@ export interface Apartment {
 	sourceUrl: string
 	title: string
 	description: string
+	microdistrict?: string
 	street?: string
 	metroStation?: string
 	price: number
@@ -36,6 +37,7 @@ export interface ApartmentApiItem {
 	sourceUrl: string
 	title?: string
 	description?: string
+	microdistrict?: string
 	street?: string
 	metroStation?: string
 	price: number
