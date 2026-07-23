@@ -1,0 +1,3 @@
+import { Heart } from 'lucide-react'
+import { Card, CardContent } from '@/shared/ui/card'
+export function FavoritesEmptyState() { return <Card className='shadow-none'><CardContent className='flex flex-col items-center py-12 text-center'><div className='grid size-14 place-items-center rounded-full bg-[var(--card-muted)] text-[var(--muted)]'><Heart className='size-7' /></div><h2 className='mt-4 text-lg font-semibold'>Пока ничего не сохранено</h2><p className='mt-1 max-w-xs text-sm text-[var(--muted)]'>Добавляйте понравившиеся квартиры, чтобы быстро вернуться к ним позже.</p></CardContent></Card> }

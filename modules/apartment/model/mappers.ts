@@ -51,6 +51,7 @@ export function mapApartmentFromApi(apartment: ApartmentApiItem): Apartment {
 		sourceUrl: apartment.sourceUrl,
 		title: title || description || 'Квартира без названия',
 		description: description || title || 'Описание пока не указано',
+		microdistrict: normalizeText(apartment.microdistrict),
 		street: normalizeText(apartment.street),
 		metroStation: normalizeText(apartment.metroStation),
 		price: apartment.price,
