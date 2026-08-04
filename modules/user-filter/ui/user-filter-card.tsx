@@ -1,5 +1,6 @@
 import { CalendarDays, CheckCircle2, Pencil, Power, Trash2 } from 'lucide-react'
 import { IconButton } from '@/shared/ui/icon-button'
+import { cn } from '@/shared/lib/utils'
 import {
 	formatFilterArea,
 	formatFilterDate,
@@ -28,7 +29,14 @@ export function UserFilterCard({
 		formatFilterDate(filter.updatedAt) ?? formatFilterDate(filter.createdAt)
 
 	return (
-		<article className='rounded-md border border-[var(--card-border)] bg-[var(--card-muted)] p-3'>
+		<article
+			className={cn(
+				'rounded-md border bg-[var(--card-muted)] p-3 transition-colors',
+				filter.active
+					? 'border-[var(--success-border)]'
+					: 'border-[var(--card-border)]'
+			)}
+		>
 			<div className='flex items-start justify-between gap-3'>
 				<div className='min-w-0'>
 					<div className='flex min-w-0 items-center gap-2'>
@@ -36,12 +44,15 @@ export function UserFilterCard({
 							Фильтр #{filter.id}
 						</h3>
 						{filter.active ? (
-							<span className='inline-flex shrink-0 items-center gap-1 rounded-md bg-[var(--success-bg)] px-2 py-1 text-xs font-semibold leading-none text-[var(--success-text)]'>
+							<span
+								aria-label='Активный фильтр'
+								className='inline-grid size-6 shrink-0 place-items-center rounded-full border border-[var(--success-border)] bg-[var(--success-bg)] text-[var(--success-text)]'
+								title='Активный фильтр'
+							>
 								<CheckCircle2
 									aria-hidden
-									className='size-3.5'
+									className='size-4'
 								/>
-								Активен
 							</span>
 						) : null}
 					</div>
