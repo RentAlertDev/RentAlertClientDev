@@ -87,6 +87,18 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+@keyframes loader-bounce {
+  0%, 80%, 100% {
+    transform: scale(.75);
+    opacity: .45;
+  }
+
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
 .rent-alert-loader {
   display: inline-grid;
   flex: none;
