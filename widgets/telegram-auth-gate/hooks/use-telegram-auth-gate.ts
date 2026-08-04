@@ -1,11 +1,9 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { getAccessToken } from '@/modules/telegram-auth/model/get-access-token'
 import { useTelegramInitData } from '@/modules/telegram-init-data'
 import { useSubmitTelegramLogin } from './use-submit-telegram-login'
-
-const AUTH_SUCCESS_DELAY_MS = 900
 
 export function useTelegramAuthGate() {
 	const { error: telegramError, telegram } = useTelegramInitData()
@@ -16,24 +14,30 @@ export function useTelegramAuthGate() {
 		? `@${telegram.user.username}`
 		: telegram.user?.first_name
 
-	useEffect(() => {
-		if (!accessToken) {
+	const completeAuthorization = useCallback(() => {
+		if (accessToken) {
+			setIsAuthorized(true)
+		}
+	}, [accessToken])
+
+	const retryAuthorization = useCallback(() => {
+		if (!telegram.initData) {
 			return
 		}
 
-		const timerId = window.setTimeout(() => {
-			setIsAuthorized(true)
-		}, AUTH_SUCCESS_DELAY_MS)
-
-		return () => window.clearTimeout(timerId)
-	}, [accessToken])
+		telegramLogin.reset()
+		telegramLogin.mutate(telegram.initData)
+	}, [telegram.initData, telegramLogin])
 
 	return {
 		accessToken,
+		canRetryAuthorization: Boolean(telegram.initData),
+		completeAuthorization,
 		isAuthorized,
 		isLoadingTelegram: !telegram.initData && !telegramError,
 		telegramError,
 		telegramLogin,
+		retryAuthorization,
 		username
 	}
 }

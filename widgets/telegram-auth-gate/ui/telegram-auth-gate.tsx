@@ -1,9 +1,9 @@
 'use client'
 
-import type { ReactNode } from 'react'
-import { CheckCircle2 } from 'lucide-react'
-import { Card, CardContent } from '@/shared/ui/card'
-import { Loader } from '@/shared/ui/loader'
+import { useState, type ReactNode } from 'react'
+import { Button } from '@/shared/ui/button'
+import { RentAlertLoader } from '@/shared/ui/rent-alert-loader'
+import { toast } from '@/shared/ui/toaster'
 import { useTelegramAuthGate } from '../hooks/use-telegram-auth-gate'
 
 interface TelegramAuthGateProps {
@@ -13,69 +13,71 @@ interface TelegramAuthGateProps {
 export function TelegramAuthGate({ children }: TelegramAuthGateProps) {
 	const {
 		accessToken,
+		canRetryAuthorization,
+		completeAuthorization,
 		isAuthorized,
 		isLoadingTelegram,
+		retryAuthorization,
 		telegramError,
 		telegramLogin,
 		username
 	} = useTelegramAuthGate()
+	const [isErrorMessageVisible, setIsErrorMessageVisible] = useState(false)
 
 	if (isAuthorized) {
 		return children
 	}
 
-	const title = username ? `Добрый день, ${username}!` : 'Добрый день!'
 	const isAuthSuccess = Boolean(accessToken)
 	const isAuthLoading = isLoadingTelegram || telegramLogin.isPending
 	const isAuthError = telegramLogin.isError || telegramError
 
 	return (
-		<main className='flex min-h-dvh items-center justify-center bg-[var(--background)] px-5 text-[var(--foreground)]'>
-			<Card className='w-full max-w-sm shadow-none'>
-				<CardContent className='flex flex-col items-center gap-5 px-6 py-8 text-center'>
-					<div>
-						<div className='text-sm font-medium text-[var(--muted)]'>
-							RentAlert
-						</div>
-						<h1 className='mt-3 text-3xl font-semibold tracking-normal'>
-							{title}
-						</h1>
-					</div>
+		<main className='flex min-h-dvh items-center justify-center bg-[var(--background)] px-5 pb-[env(safe-area-inset-bottom)] pt-[env(safe-area-inset-top)] text-[var(--foreground)]'>
+			{isAuthSuccess ? (
+				<RentAlertLoader
+					onAnimationComplete={() => {
+						toast.success(
+							username ? `Добро пожаловать, ${username}!` : 'Добро пожаловать!'
+						)
+						completeAuthorization()
+					}}
+					size={220}
+					status='success'
+				/>
+			) : null}
 
-					{isAuthSuccess ? (
-						<div className='flex flex-col items-center gap-3'>
-							<CheckCircle2
-								aria-hidden
-								className='size-10 text-[var(--success-text)]'
-							/>
-							<div>
-								<div className='font-semibold'>
-									Авторизация прошла успешно
-								</div>
-								<p className='mt-1 text-sm text-[var(--muted)]'>
-									Открываем квартиры
-								</p>
+			{isAuthLoading ? (
+				<RentAlertLoader size={220} status='loading' />
+			) : null}
+
+			{isAuthError ? (
+				<div className='flex flex-col items-center gap-4 text-center'>
+					<RentAlertLoader
+						onAnimationComplete={() => setIsErrorMessageVisible(true)}
+						size={220}
+						status='error'
+					/>
+					{isErrorMessageVisible ? (
+						<>
+							<div className='rounded-md border border-[var(--danger-border)] bg-[var(--danger-bg)] px-4 py-3 text-sm text-[var(--danger-text)]'>
+								Не получилось авторизоваться. Попробуйте ещё раз.
 							</div>
-						</div>
+							{canRetryAuthorization ? (
+								<Button
+									onClick={() => {
+										setIsErrorMessageVisible(false)
+										retryAuthorization()
+									}}
+									variant='outline'
+								>
+									Повторить
+								</Button>
+							) : null}
+						</>
 					) : null}
-
-					{isAuthLoading ? (
-						<div className='flex flex-col items-center gap-3'>
-							<Loader label='Происходит авторизация' />
-							<p className='text-sm text-[var(--muted)]'>
-								Происходит авторизация...
-							</p>
-						</div>
-					) : null}
-
-					{isAuthError ? (
-						<div className='rounded-md border border-[var(--danger-border)] bg-[var(--danger-bg)] px-4 py-3 text-sm text-[var(--danger-text)]'>
-							Не получилось авторизоваться. Открой приложение
-							заново.
-						</div>
-					) : null}
-				</CardContent>
-			</Card>
+				</div>
+			) : null}
 		</main>
 	)
 }
