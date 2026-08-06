@@ -19,6 +19,7 @@ import { Button } from '@/shared/ui/button'
 import { getApiErrorMessage } from '@/shared/api/get-api-error-message'
 import { Card, CardContent } from '@/shared/ui/card'
 import { toast } from '@/shared/ui/toaster'
+import { useScrollToContent } from '@/shared/hooks/use-scroll-to-content'
 
 const APARTMENTS_PAGE_SIZE = 10
 
@@ -69,6 +70,10 @@ export function ApartmentsFeed() {
 		isPageChanging ||
 		isPageLocked ||
 		apartmentsQuery.isError
+	const listRef = useScrollToContent({
+		isReady: !apartmentsQuery.isFetching,
+		pageKey: apartmentsQuery.data?.number
+	})
 
 	return (
 		<main className='min-h-dvh bg-[var(--background)] px-4 py-5 text-[var(--foreground)] sm:px-6'>
@@ -107,7 +112,7 @@ export function ApartmentsFeed() {
 					</Card>
 				) : null}
 
-				<section className='min-h-[520px]'>
+				<section className='min-h-[520px] scroll-mt-4' ref={listRef}>
 					{isInitialLoading ? (
 						<div
 							aria-label='Загружаем квартиры'
