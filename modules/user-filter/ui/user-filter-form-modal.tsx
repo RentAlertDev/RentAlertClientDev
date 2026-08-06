@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { X } from 'lucide-react'
 import { useForm } from 'react-hook-form'
+import { getApiErrorMessage } from '@/shared/api/get-api-error-message'
 import { Button } from '@/shared/ui/button'
 import { IconButton } from '@/shared/ui/icon-button'
 import {
@@ -26,11 +27,7 @@ interface UserFilterFormModalProps {
 }
 
 function getErrorMessage(error: unknown) {
-	if (error instanceof Error) {
-		return error.message
-	}
-
-	return 'Не удалось сохранить фильтр'
+	return getApiErrorMessage(error, 'Не удалось сохранить фильтр')
 }
 
 export function UserFilterFormModal({

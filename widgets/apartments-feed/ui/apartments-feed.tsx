@@ -2,7 +2,11 @@
 
 import { useState } from 'react'
 import { SlidersHorizontal } from 'lucide-react'
-import { ApartmentCard, useApartments } from '@/modules/apartment'
+import {
+	ApartmentCard,
+	ApartmentCardSkeleton,
+	useApartments
+} from '@/modules/apartment'
 import {
 	DEFAULT_FAVORITE_STATUS_ID,
 	FAVORITES_PAGE_SIZE,
@@ -12,8 +16,8 @@ import {
 import { PaginationControls, usePagination } from '@/modules/pagination'
 import { UserFilterFormModal } from '@/modules/user-filter'
 import { Button } from '@/shared/ui/button'
+import { getApiErrorMessage } from '@/shared/api/get-api-error-message'
 import { Card, CardContent } from '@/shared/ui/card'
-import { Loader } from '@/shared/ui/loader'
 import { toast } from '@/shared/ui/toaster'
 import { useStaggeredApartments } from '../hooks/use-staggered-apartments'
 
@@ -48,9 +52,12 @@ export function ApartmentsFeed() {
 			{
 				onSuccess: () =>
 					toast.success('Квартира добавлена в избранное'),
-				onError: () =>
+				onError: error =>
 					toast.error(
-						'Не удалось добавить квартиру. Возможно, она уже сохранена или достигнут лимит 30 объявлений.'
+						getApiErrorMessage(
+							error,
+							'Не удалось добавить квартиру в избранное'
+						)
 					)
 			}
 		)
@@ -103,9 +110,17 @@ export function ApartmentsFeed() {
 					</Card>
 				) : null}
 
-				<section className='grid min-h-[520px] place-items-center gap-4'>
+				<section className='min-h-[520px]'>
 					{isListLoading ? (
-						<Loader label='Загружаем квартиры' />
+						<div
+							aria-label='Загружаем квартиры'
+							className='grid w-full gap-4'
+							role='status'
+						>
+							{Array.from({ length: 3 }).map((_, index) => (
+								<ApartmentCardSkeleton key={index} />
+							))}
+						</div>
 					) : (
 						<div className='grid w-full gap-4'>
 							{visibleApartments.map(apartment => (

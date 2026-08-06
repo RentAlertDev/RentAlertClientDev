@@ -40,6 +40,7 @@ export async function GET(request: NextRequest) {
 			{
 				headers: {
 					Accept: 'application/json',
+					'Accept-Language': 'ru',
 					...authHeaders
 				},
 				params: {

@@ -18,6 +18,7 @@ export async function POST(request: NextRequest) {
 			body,
 			{
 				headers: {
+					'Accept-Language': 'ru',
 					'Content-Type': 'application/json'
 				}
 			}

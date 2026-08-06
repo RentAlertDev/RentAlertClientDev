@@ -3,9 +3,14 @@
 import { useProfile } from '@/modules/profile'
 import { useUserFiltersQuery } from '@/modules/user-filter'
 import { Card, CardContent } from '@/shared/ui/card'
-import { Loader } from '@/shared/ui/loader'
-import { ProfileFilters } from '@/widgets/profile-filters'
-import { ProfileOverview } from '@/widgets/profile-overview'
+import {
+	ProfileFilters,
+	ProfileFiltersSkeleton
+} from '@/widgets/profile-filters'
+import {
+	ProfileOverview,
+	ProfileOverviewSkeleton
+} from '@/widgets/profile-overview'
 
 export default function ProfilePage() {
 	const profileQuery = useProfile()
@@ -16,9 +21,10 @@ export default function ProfilePage() {
 		<main className='min-h-dvh bg-[var(--background)] px-4 py-5 text-[var(--foreground)] sm:px-6'>
 			<div className='mx-auto flex w-full max-w-3xl flex-col gap-5 pb-[calc(24px+env(safe-area-inset-bottom))]'>
 				{isPageLoading ? (
-					<div className='grid min-h-[calc(100dvh-180px)] place-items-center'>
-						<Loader label='Загружаем профиль' />
-					</div>
+					<>
+						<ProfileOverviewSkeleton />
+						<ProfileFiltersSkeleton />
+					</>
 				) : null}
 
 				{profileQuery.isError ? (

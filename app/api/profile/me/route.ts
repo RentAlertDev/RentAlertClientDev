@@ -16,6 +16,7 @@ export async function GET() {
 			{
 				headers: {
 					Accept: 'application/json',
+					'Accept-Language': 'ru',
 					...authHeaders
 				}
 			}

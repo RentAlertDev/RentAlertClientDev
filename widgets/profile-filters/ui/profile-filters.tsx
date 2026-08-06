@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import { Card, CardContent } from '@/shared/ui/card'
+import { getApiErrorMessage } from '@/shared/api/get-api-error-message'
 import { ConfirmDialog } from '@/shared/ui/confirm-dialog'
 import { toast } from '@/shared/ui/toaster'
 import {
@@ -19,11 +20,7 @@ interface ProfileFiltersProps {
 }
 
 function getErrorMessage(error: unknown) {
-	if (error instanceof Error) {
-		return error.message
-	}
-
-	return 'Не удалось выполнить действие'
+	return getApiErrorMessage(error, 'Не удалось выполнить действие')
 }
 
 export function ProfileFilters({
@@ -69,12 +66,8 @@ export function ProfileFilters({
 			await deleteMutation.mutateAsync(deletingFilter.id)
 			toast.success('Фильтр удален')
 			setDeletingFilter(null)
-		} catch {
-			toast.error(
-				deletingFilter.active
-					? 'Активный фильтр нельзя удалить. Сначала отключите его.'
-					: 'Не удалось удалить фильтр'
-			)
+		} catch (error) {
+			toast.error(getApiErrorMessage(error, 'Не удалось удалить фильтр'))
 		}
 	}
 

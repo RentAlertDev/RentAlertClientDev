@@ -23,6 +23,7 @@ export async function proxyBackendRequest<TResponse = unknown>({
 		const requestConfig: AxiosRequestConfig = {
 			headers: {
 				Accept: 'application/json',
+				'Accept-Language': 'ru',
 				...authHeaders
 			},
 			method,
