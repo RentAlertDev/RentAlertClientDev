@@ -25,15 +25,6 @@ export function usePagination() {
 	const [isPageLocked, setIsPageLocked] = useState(false)
 	const debouncedPage = useDebouncedValue(page, PAGE_CHANGE_DEBOUNCE_MS)
 
-	function scrollToPageStart() {
-		window.requestAnimationFrame(() => {
-			window.scrollTo({
-				top: 0,
-				behavior: 'smooth'
-			})
-		})
-	}
-
 	function lockPageChange() {
 		setIsPageLocked(true)
 
@@ -48,7 +39,6 @@ export function usePagination() {
 		}
 
 		setPage(nextPage)
-		scrollToPageStart()
 		lockPageChange()
 	}
 
