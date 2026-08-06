@@ -19,7 +19,6 @@ import { Button } from '@/shared/ui/button'
 import { getApiErrorMessage } from '@/shared/api/get-api-error-message'
 import { Card, CardContent } from '@/shared/ui/card'
 import { toast } from '@/shared/ui/toaster'
-import { useStaggeredApartments } from '../hooks/use-staggered-apartments'
 
 const APARTMENTS_PAGE_SIZE = 10
 
@@ -63,15 +62,13 @@ export function ApartmentsFeed() {
 		)
 	}
 	const apartments = apartmentsQuery.data?.content ?? []
-	const { isRendering, visibleApartments } = useStaggeredApartments(
-		apartments,
-		apartmentsQuery.data?.number ?? debouncedPage
-	)
 	const isInitialLoading = apartmentsQuery.isPending && !apartmentsQuery.data
 	const isPageChanging = apartmentsQuery.isFetching && !isInitialLoading
-	const isListLoading = isInitialLoading || isPageChanging
 	const isPaginationDisabled =
-		isListLoading || isPageLocked || apartmentsQuery.isError || isRendering
+		isInitialLoading ||
+		isPageChanging ||
+		isPageLocked ||
+		apartmentsQuery.isError
 
 	return (
 		<main className='min-h-dvh bg-[var(--background)] px-4 py-5 text-[var(--foreground)] sm:px-6'>
@@ -111,7 +108,7 @@ export function ApartmentsFeed() {
 				) : null}
 
 				<section className='min-h-[520px]'>
-					{isListLoading ? (
+					{isInitialLoading ? (
 						<div
 							aria-label='Загружаем квартиры'
 							className='grid w-full gap-4'
@@ -122,8 +119,8 @@ export function ApartmentsFeed() {
 							))}
 						</div>
 					) : (
-						<div className='grid w-full gap-4'>
-							{visibleApartments.map(apartment => (
+						<div className='grid w-full gap-4 transition-opacity duration-200 data-[fetching=true]:opacity-60' data-fetching={isPageChanging}>
+							{apartments.map(apartment => (
 								<ApartmentCard
 									apartment={apartment}
 									isFavorite={favoriteIds.has(apartment.id)}

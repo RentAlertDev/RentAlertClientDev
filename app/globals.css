@@ -125,7 +125,7 @@ body {
 .rent-alert-loader__pulse,
 .rent-alert-loader__success-wave,
 .rent-alert-loader__error-wave { fill: none; transform-origin: 50% 58.75%; }
-.rent-alert-loader__pulse { stroke: #1685f3; stroke-width: 3; }
+.rent-alert-loader__pulse { opacity: 0; stroke: #1685f3; stroke-width: 3; }
 .rent-alert-loader__success-wave { stroke: #18b76a; stroke-width: 4; stroke-linecap: round; opacity: 0; }
 .rent-alert-loader__error-wave { stroke: #ef3340; stroke-width: 4; stroke-linecap: round; opacity: 0; }
 

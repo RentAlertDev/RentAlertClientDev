@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form'
 import { getApiErrorMessage } from '@/shared/api/get-api-error-message'
 import { Button } from '@/shared/ui/button'
 import { IconButton } from '@/shared/ui/icon-button'
+import { InfoNote } from '@/shared/ui/info-note'
 import {
 	mapFilterToFormValues,
 	mapFormValuesToRequest
@@ -155,6 +156,12 @@ export function UserFilterFormModal({
 				</div>
 
 				<div className='max-h-[calc(100dvh-220px)] overflow-y-auto overscroll-contain p-4'>
+					{!isEditMode ? (
+						<InfoNote className='mb-4'>
+							Активный фильтр используется для отправки новых
+							объявлений в Telegram-бот.
+						</InfoNote>
+					) : null}
 					<UserFilterFormFields
 						errors={form.formState.errors}
 						register={form.register}

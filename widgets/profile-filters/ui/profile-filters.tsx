@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react'
 import { Card, CardContent } from '@/shared/ui/card'
 import { getApiErrorMessage } from '@/shared/api/get-api-error-message'
 import { ConfirmDialog } from '@/shared/ui/confirm-dialog'
+import { InfoNote } from '@/shared/ui/info-note'
 import { toast } from '@/shared/ui/toaster'
 import {
 	UserFilterCard,
@@ -88,6 +89,11 @@ export function ProfileFilters({
 					</div>
 				) : null}
 			</div>
+
+			<InfoNote className='mb-4'>
+				Активируйте нужный фильтр — только активные фильтры
+				используются для отправки новых объявлений в Telegram-бот.
+			</InfoNote>
 
 			<div className='space-y-3'>
 				{isError ? (
