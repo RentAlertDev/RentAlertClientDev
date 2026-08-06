@@ -2,8 +2,8 @@
 
 import { useState, type ReactNode } from 'react'
 import { Button } from '@/shared/ui/button'
+import { getApiErrorMessage } from '@/shared/api/get-api-error-message'
 import { RentAlertLoader } from '@/shared/ui/rent-alert-loader'
-import { toast } from '@/shared/ui/toaster'
 import { useTelegramAuthGate } from '../hooks/use-telegram-auth-gate'
 
 interface TelegramAuthGateProps {
@@ -19,8 +19,7 @@ export function TelegramAuthGate({ children }: TelegramAuthGateProps) {
 		isLoadingTelegram,
 		retryAuthorization,
 		telegramError,
-		telegramLogin,
-		username
+		telegramLogin
 	} = useTelegramAuthGate()
 	const [isErrorMessageVisible, setIsErrorMessageVisible] = useState(false)
 
@@ -36,12 +35,7 @@ export function TelegramAuthGate({ children }: TelegramAuthGateProps) {
 		<main className='flex min-h-dvh items-center justify-center bg-[var(--background)] px-5 pb-[env(safe-area-inset-bottom)] pt-[env(safe-area-inset-top)] text-[var(--foreground)]'>
 			{isAuthSuccess ? (
 				<RentAlertLoader
-					onAnimationComplete={() => {
-						toast.success(
-							username ? `Добро пожаловать, ${username}!` : 'Добро пожаловать!'
-						)
-						completeAuthorization()
-					}}
+					onAnimationComplete={completeAuthorization}
 					size={220}
 					status='success'
 				/>
@@ -61,7 +55,12 @@ export function TelegramAuthGate({ children }: TelegramAuthGateProps) {
 					{isErrorMessageVisible ? (
 						<>
 							<div className='rounded-md border border-[var(--danger-border)] bg-[var(--danger-bg)] px-4 py-3 text-sm text-[var(--danger-text)]'>
-								Не получилось авторизоваться. Попробуйте ещё раз.
+								{telegramLogin.isError
+									? getApiErrorMessage(
+											telegramLogin.error,
+											'Не получилось авторизоваться. Попробуйте ещё раз.'
+										)
+									: telegramError}
 							</div>
 							{canRetryAuthorization ? (
 								<Button

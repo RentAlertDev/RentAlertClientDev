@@ -48,13 +48,13 @@ export function RentAlertLoader({
 			style={{ height: size, width: size }}
 		>
 			<svg aria-hidden className='rent-alert-loader__svg' viewBox='0 0 160 160'>
-				<circle className='rent-alert-loader__pulse' cx='80' cy='92' r='43' />
-				<circle className='rent-alert-loader__success-wave rent-alert-loader__wave--1' cx='80' cy='94' r='28' />
-				<circle className='rent-alert-loader__success-wave rent-alert-loader__wave--2' cx='80' cy='94' r='34' />
-				<circle className='rent-alert-loader__success-wave rent-alert-loader__wave--3' cx='80' cy='94' r='40' />
-				<circle className='rent-alert-loader__error-wave rent-alert-loader__wave--1' cx='80' cy='94' r='28' />
-				<circle className='rent-alert-loader__error-wave rent-alert-loader__wave--2' cx='80' cy='94' r='34' />
-				<circle className='rent-alert-loader__error-wave rent-alert-loader__wave--3' cx='80' cy='94' r='40' />
+				<circle className='rent-alert-loader__pulse' cx='80' cy='92' r='50' />
+				<circle className='rent-alert-loader__success-wave rent-alert-loader__wave--1' cx='80' cy='94' r='38' />
+				<circle className='rent-alert-loader__success-wave rent-alert-loader__wave--2' cx='80' cy='94' r='46' />
+				<circle className='rent-alert-loader__success-wave rent-alert-loader__wave--3' cx='80' cy='94' r='54' />
+				<circle className='rent-alert-loader__error-wave rent-alert-loader__wave--1' cx='80' cy='94' r='38' />
+				<circle className='rent-alert-loader__error-wave rent-alert-loader__wave--2' cx='80' cy='94' r='46' />
+				<circle className='rent-alert-loader__error-wave rent-alert-loader__wave--3' cx='80' cy='94' r='54' />
 				<g className='rent-alert-loader__house'>
 					<path fill='#147BF3' d='M29.7 69.1 73.1 28.5a10 10 0 0 1 13.8 0l16 15V36a5 5 0 0 1 5-5h10a5 5 0 0 1 5 5v26.2l7.4 6.9c4.4 4.1 1.5 11.4-4.5 11.4h-3.1v39.2c0 10.1-8.2 18.3-18.3 18.3H55.6a18.3 18.3 0 0 1-18.3-18.3V80.5h-3.1c-6 0-8.9-7.3-4.5-11.4Z' />
 					<path fill='#fff' d='M80 58.5c-21 0-38 16.1-38 36 0 16.4 11.5 30.2 27.2 34.6v17.1c0 2.5 2.9 3.9 4.9 2.3l22.6-18.2c12.7-6 21.3-19.5 21.3-35.8 0-19.9-17-36-38-36Z' />
