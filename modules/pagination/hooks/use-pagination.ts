@@ -61,12 +61,17 @@ export function usePagination() {
 		changePage(boundedPage)
 	}
 
+	function resetPage() {
+		setPage(0)
+	}
+
 	return {
 		debouncedPage,
 		goToNextPage,
 		goToPage,
 		goToPreviousPage,
 		isPageLocked,
-		page
+		page,
+		resetPage
 	}
 }

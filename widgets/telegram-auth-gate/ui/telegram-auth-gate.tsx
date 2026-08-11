@@ -10,6 +10,8 @@ interface TelegramAuthGateProps {
 	children: ReactNode
 }
 
+const AUTH_LOADER_SIZE = 168
+
 export function TelegramAuthGate({ children }: TelegramAuthGateProps) {
 	const {
 		accessToken,
@@ -36,20 +38,20 @@ export function TelegramAuthGate({ children }: TelegramAuthGateProps) {
 			{isAuthSuccess ? (
 				<RentAlertLoader
 					onAnimationComplete={completeAuthorization}
-					size={220}
+					size={AUTH_LOADER_SIZE}
 					status='success'
 				/>
 			) : null}
 
 			{isAuthLoading ? (
-				<RentAlertLoader size={220} status='loading' />
+				<RentAlertLoader size={AUTH_LOADER_SIZE} status='loading' />
 			) : null}
 
 			{isAuthError ? (
 				<div className='flex flex-col items-center gap-4 text-center'>
 					<RentAlertLoader
 						onAnimationComplete={() => setIsErrorMessageVisible(true)}
-						size={220}
+						size={AUTH_LOADER_SIZE}
 						status='error'
 					/>
 					{isErrorMessageVisible ? (
