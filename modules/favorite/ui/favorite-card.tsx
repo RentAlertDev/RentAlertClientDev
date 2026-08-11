@@ -9,12 +9,12 @@ import { ApartmentPrice } from '@/modules/apartment/ui/apartment-price'
 import { getApartmentPricePair } from '@/modules/apartment/model/formatters'
 import { Button } from '@/shared/ui/button'
 import { Card, CardContent } from '@/shared/ui/card'
-import type { FavoriteListing } from '../model/types'
+import type { FavoriteListing, FavoriteStatusOption } from '../model/types'
 import { FavoriteStatusBadge } from './favorite-status-badge'
 import { FavoriteStatusControl } from './favorite-status-control'
 
-interface Props { favorite: FavoriteListing; isRemoving?: boolean; onRemove: () => void }
-export function FavoriteCard({ favorite, isRemoving, onRemove }: Props) {
+interface Props { favorite: FavoriteListing; isRemoving?: boolean; onRemove: () => void; statuses: FavoriteStatusOption[] }
+export function FavoriteCard({ favorite, isRemoving, onRemove, statuses }: Props) {
 	const { listing } = favorite
 	const prices = getApartmentPricePair(listing)
 	const address = [listing.microdistrict, listing.street, listing.metroStation].filter(Boolean).join(' · ')
@@ -27,7 +27,7 @@ export function FavoriteCard({ favorite, isRemoving, onRemove }: Props) {
 			<div className='flex items-start justify-between gap-3'><div className='min-w-0'><h2 className='line-clamp-2 text-lg font-semibold'>{listing.title}</h2>{address && <p className='mt-1 flex items-center gap-1.5 truncate text-sm text-[var(--muted)]'><MapPin className='size-4 shrink-0' />{address}</p>}</div><div className='shrink-0 text-right'><ApartmentPrice price={prices.primary} /><div className='mt-1 text-[var(--muted)]'><ApartmentPrice price={prices.secondary} size='sm' /></div></div></div>
 			<div className='grid grid-cols-3 gap-2'><ApartmentFact label='Комнаты' value={formatApartmentRooms(listing)} /><ApartmentFact label='Площадь' value={formatApartmentArea(listing.areaTotal)} /><ApartmentFact label='Этаж' value={formatApartmentFloor(listing)} /></div>
 			<div className='flex flex-wrap items-center gap-2'><FavoriteStatusBadge status={favorite.status} />{favorite.viewingDate && <span className='inline-flex items-center gap-1.5 text-xs text-[var(--muted)]'><CalendarDays className='size-4' />{new Intl.DateTimeFormat('ru-RU', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(favorite.viewingDate))}</span>}</div>
-			<FavoriteStatusControl favorite={favorite} />
+			<FavoriteStatusControl favorite={favorite} statuses={statuses} />
 			<div className='grid grid-cols-2 gap-2'><Button disabled={isRemoving} onClick={onRemove} variant='destructive'><Trash2 className='size-4' />Удалить</Button>{listing.sourceUrl ? <Button onClick={() => window.open(listing.sourceUrl, '_blank', 'noopener,noreferrer')} variant='outline'><ExternalLink className='size-4' />Открыть</Button> : <span />}</div>
 		</CardContent>
 	</Card>

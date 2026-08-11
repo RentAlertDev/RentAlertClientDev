@@ -8,6 +8,7 @@ import {
 	FavoritesEmptyState,
 	FavoritesSkeleton,
 	FavoriteStatusName,
+	useFavoriteStatusesQuery,
 	useFavoritesQuery,
 	useRemoveFavoriteMutation
 } from '@/modules/favorite'
@@ -45,6 +46,7 @@ export function FavoritesFeed() {
 		sort: [`${sortField},${sortDirection}`],
 		...(status ? { status } : {})
 	})
+	const statusesQuery = useFavoriteStatusesQuery()
 	const removeMutation = useRemoveFavoriteMutation()
 	const isLoading = query.isPending && !query.data
 	const listRef = useScrollToContent({
@@ -92,6 +94,7 @@ export function FavoritesFeed() {
 					sortDirection={sortDirection}
 					sortField={sortField}
 					status={status}
+					statuses={statusesQuery.data ?? []}
 				/>
 
 				{query.isError ? (
@@ -123,6 +126,7 @@ export function FavoritesFeed() {
 									}
 									key={favorite.listing.id}
 									onRemove={() => setRemovingId(favorite.listing.id)}
+									statuses={statusesQuery.data ?? []}
 								/>
 							))}
 						</div>

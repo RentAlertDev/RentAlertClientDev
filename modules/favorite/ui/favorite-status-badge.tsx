@@ -20,7 +20,7 @@ export function FavoriteStatusBadge({ status }: { status?: FavoriteStatusInfo })
 			}
 			title={status.description}
 		>
-			{FAVORITE_STATUS_LABELS[status.name] ?? status.name}
+			{status.description || FAVORITE_STATUS_LABELS[status.name] || status.name}
 		</span>
 	)
 }

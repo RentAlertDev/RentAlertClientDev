@@ -1,7 +1,7 @@
 import { ArrowUpDown, Filter } from 'lucide-react'
 import {
-	FAVORITE_STATUS_LABELS,
-	FavoriteStatusName
+	FavoriteStatusName,
+	type FavoriteStatusOption
 } from '@/modules/favorite'
 
 export type FavoritesSortDirection = 'asc' | 'desc'
@@ -14,6 +14,7 @@ interface FavoritesToolbarProps {
 	sortDirection: FavoritesSortDirection
 	sortField: FavoritesSortField
 	status: FavoriteStatusName | ''
+	statuses: FavoriteStatusOption[]
 }
 
 const selectClassName =
@@ -25,7 +26,8 @@ export function FavoritesToolbar({
 	onStatusChange,
 	sortDirection,
 	sortField,
-	status
+	status,
+	statuses
 }: FavoritesToolbarProps) {
 	return (
 		<div className='rounded-lg border border-[var(--card-border)] bg-[var(--card-muted)] p-3'>
@@ -44,9 +46,9 @@ export function FavoritesToolbar({
 						value={status}
 					>
 						<option value=''>Все статусы</option>
-						{Object.values(FavoriteStatusName).map(name => (
-							<option key={name} value={name}>
-								{FAVORITE_STATUS_LABELS[name]}
+						{statuses.map(option => (
+							<option key={option.id} value={option.name}>
+								{option.description}
 							</option>
 						))}
 					</select>

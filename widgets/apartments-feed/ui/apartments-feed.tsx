@@ -8,9 +8,10 @@ import {
 	useApartments
 } from '@/modules/apartment'
 import {
-	DEFAULT_FAVORITE_STATUS_ID,
 	FAVORITES_MAX_SIZE,
+	FavoriteStatusName,
 	useAddFavoriteMutation,
+	useFavoriteStatusesQuery,
 	useFavoritesQuery
 } from '@/modules/favorite'
 import { PaginationControls, usePagination } from '@/modules/pagination'
@@ -42,13 +43,23 @@ export function ApartmentsFeed() {
 		size: FAVORITES_MAX_SIZE,
 		sort: ['createdAt,desc']
 	})
+	const statusesQuery = useFavoriteStatusesQuery()
 	const addFavoriteMutation = useAddFavoriteMutation()
 	const favoriteIds = new Set(
 		favoritesQuery.data?.content.map(item => item.listing.id) ?? []
 	)
 	const addToFavorites = (listingId: number) => {
+		const interestedStatus = statusesQuery.data?.find(
+			status => status.name === FavoriteStatusName.Interested
+		)
+
+		if (!interestedStatus) {
+			toast.error('Не удалось определить начальный статус избранного')
+			return
+		}
+
 		addFavoriteMutation.mutate(
-			{ listingId, listingStatusId: DEFAULT_FAVORITE_STATUS_ID },
+			{ listingId, listingStatusId: interestedStatus.id },
 			{
 				onSuccess: () =>
 					toast.success('Квартира добавлена в избранное'),
@@ -130,9 +141,10 @@ export function ApartmentsFeed() {
 									apartment={apartment}
 									isFavorite={favoriteIds.has(apartment.id)}
 									isFavoritePending={
-										addFavoriteMutation.isPending &&
-										addFavoriteMutation.variables
-											?.listingId === apartment.id
+										statusesQuery.isPending ||
+										(addFavoriteMutation.isPending &&
+											addFavoriteMutation.variables
+												?.listingId === apartment.id)
 									}
 									key={apartment.id}
 									onAddFavorite={() =>

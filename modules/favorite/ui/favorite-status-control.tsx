@@ -12,12 +12,16 @@ import { getApiErrorMessage } from '@/shared/api/get-api-error-message'
 import { cn } from '@/shared/lib/utils'
 import { toast } from '@/shared/ui/toaster'
 import { useUpdateFavoriteStatusMutation } from '../hooks/use-update-favorite-status-mutation'
-import { FAVORITE_STATUS_OPTIONS } from '../model/constants'
 import { getSafeStatusColor } from '../model/get-status-color'
-import { FavoriteStatusName, type FavoriteListing } from '../model/types'
+import {
+	FavoriteStatusName,
+	type FavoriteListing,
+	type FavoriteStatusOption
+} from '../model/types'
 
 interface FavoriteStatusControlProps {
 	favorite: FavoriteListing
+	statuses: FavoriteStatusOption[]
 }
 
 const statusIcons = {
@@ -30,7 +34,8 @@ const statusIcons = {
 }
 
 export function FavoriteStatusControl({
-	favorite
+	favorite,
+	statuses
 }: FavoriteStatusControlProps) {
 	const mutation = useUpdateFavoriteStatusMutation()
 	const activeColor = getSafeStatusColor(favorite.status?.color)
@@ -41,7 +46,7 @@ export function FavoriteStatusControl({
 				Изменить статус
 			</div>
 			<div className='flex flex-wrap gap-2'>
-				{FAVORITE_STATUS_OPTIONS.map(option => {
+				{statuses.map(option => {
 					const Icon = statusIcons[option.name]
 					const isCurrent = favorite.status?.name === option.name
 
@@ -95,7 +100,7 @@ export function FavoriteStatusControl({
 							type='button'
 						>
 							<Icon aria-hidden className='size-3.5' />
-							{option.label}
+							{option.description}
 						</button>
 					)
 				})}

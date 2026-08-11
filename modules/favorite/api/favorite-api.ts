@@ -1,7 +1,15 @@
 import { httpClient } from '@/shared/api/http-client'
-import { FAVORITES_API } from '../model/constants'
+import { FAVORITES_API, FAVORITE_STATUSES_API } from '../model/constants'
 import { mapFavoritesResponse } from '../model/mapper'
-import type { FavoriteApiItem, FavoriteCreateRequest, FavoritesApiPage, FavoriteUpdateStatusRequest, GetFavoritesParams } from '../model/types'
+import type { FavoriteApiItem, FavoriteCreateRequest, FavoritesApiPage, FavoriteStatusOption, FavoriteUpdateStatusRequest, GetFavoritesParams } from '../model/types'
+
+export async function getFavoriteStatuses() {
+	const response = await httpClient.get<FavoriteStatusOption[]>(
+		FAVORITE_STATUSES_API
+	)
+
+	return response.data
+}
 export async function getFavorites(params: GetFavoritesParams) {
 	const response = await httpClient.get<
 		FavoriteApiItem[] | FavoriteApiItem | FavoritesApiPage
