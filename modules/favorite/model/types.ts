@@ -7,6 +7,6 @@ export interface FavoriteApiItem { listing: ApartmentApiItem; status?: FavoriteS
 export interface FavoritesPageMeta { number: number; size: number; totalElements: number; totalPages: number }
 export interface FavoritesApiPage { content: FavoriteApiItem[]; page?: FavoritesPageMeta; number?: number; size?: number; totalElements?: number; totalPages?: number; first?: boolean; last?: boolean }
 export interface FavoritesPage extends FavoritesPageMeta { content: FavoriteListing[]; first: boolean; last: boolean }
-export interface GetFavoritesParams { page?: number; size?: number; sort?: string[] }
+export interface GetFavoritesParams { page?: number; size?: number; sort?: string[]; status?: FavoriteStatusName }
 export interface FavoriteCreateRequest { listingId: number; listingStatusId: number; viewingDate?: string }
 export interface FavoriteUpdateStatusRequest { listingStatusId: number; viewingDate?: string }

@@ -1,7 +1,8 @@
 'use client'
 
 import Image from 'next/image'
-import { Heart, MapPin } from 'lucide-react'
+import { ExternalLink, Heart, MapPin } from 'lucide-react'
+import { Button } from '@/shared/ui/button'
 import { Card, CardContent } from '@/shared/ui/card'
 import { IconButton } from '@/shared/ui/icon-button'
 import { APARTMENT_FALLBACK_PHOTO_URL } from '../model/constants'
@@ -36,6 +37,22 @@ export function ApartmentCard({ apartment, isFavorite, isFavoritePending, onAddF
 			</div>
 			<div className='grid grid-cols-2 gap-2 sm:grid-cols-4'><ApartmentFact label='Комнаты' value={formatApartmentRooms(apartment)} /><ApartmentFact label='Площадь' value={formatApartmentArea(apartment.areaTotal)} /><ApartmentFact label='Этаж' value={formatApartmentFloor(apartment)} /><ApartmentFact label='Тип дома' value={formatApartmentHouseType(apartment.houseType)} /></div>
 			<p className='overflow-hidden text-sm leading-6 text-[var(--foreground)]/80 [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:3]'>{apartment.description}</p>
+			{apartment.sourceUrl ? (
+				<Button
+					className='w-full'
+					onClick={() =>
+						window.open(
+							apartment.sourceUrl,
+							'_blank',
+							'noopener,noreferrer'
+						)
+					}
+					variant='outline'
+				>
+					<ExternalLink aria-hidden className='size-4' />
+					Открыть
+				</Button>
+			) : null}
 		</CardContent>
 	</Card>
 }

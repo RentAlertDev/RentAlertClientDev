@@ -13,6 +13,7 @@ import { cn } from '@/shared/lib/utils'
 import { toast } from '@/shared/ui/toaster'
 import { useUpdateFavoriteStatusMutation } from '../hooks/use-update-favorite-status-mutation'
 import { FAVORITE_STATUS_OPTIONS } from '../model/constants'
+import { getSafeStatusColor } from '../model/get-status-color'
 import { FavoriteStatusName, type FavoriteListing } from '../model/types'
 
 interface FavoriteStatusControlProps {
@@ -32,6 +33,7 @@ export function FavoriteStatusControl({
 	favorite
 }: FavoriteStatusControlProps) {
 	const mutation = useUpdateFavoriteStatusMutation()
+	const activeColor = getSafeStatusColor(favorite.status?.color)
 
 	return (
 		<div className='rounded-md border border-[var(--card-border)] bg-[var(--card-muted)] p-3'>
@@ -52,9 +54,11 @@ export function FavoriteStatusControl({
 									? 'border-[var(--primary)] bg-[var(--primary)] text-[var(--primary-foreground)]'
 									: 'border-[var(--card-border)] bg-[var(--card)] text-[var(--muted)] hover:text-[var(--foreground)]'
 							)}
-							disabled={mutation.isPending || isCurrent}
+							disabled={mutation.isPending}
 							key={option.name}
-							onClick={() =>
+							onClick={() => {
+								if (isCurrent) return
+
 								mutation.mutate(
 									{
 										data: {
@@ -77,6 +81,16 @@ export function FavoriteStatusControl({
 											toast.success('Статус обновлён')
 									}
 								)
+							}}
+							style={
+								isCurrent && activeColor
+									? {
+											backgroundColor: `color-mix(in srgb, ${activeColor} 20%, var(--card))`,
+											borderColor: activeColor,
+											boxShadow: `0 0 0 1px color-mix(in srgb, ${activeColor} 35%, transparent)`,
+											color: `color-mix(in srgb, ${activeColor} 72%, var(--foreground))`
+										}
+									: undefined
 							}
 							type='button'
 						>

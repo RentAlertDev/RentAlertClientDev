@@ -9,7 +9,7 @@ import {
 } from '@/modules/apartment'
 import {
 	DEFAULT_FAVORITE_STATUS_ID,
-	FAVORITES_PAGE_SIZE,
+	FAVORITES_MAX_SIZE,
 	useAddFavoriteMutation,
 	useFavoritesQuery
 } from '@/modules/favorite'
@@ -39,7 +39,7 @@ export function ApartmentsFeed() {
 	})
 	const favoritesQuery = useFavoritesQuery({
 		page: 0,
-		size: FAVORITES_PAGE_SIZE,
+		size: FAVORITES_MAX_SIZE,
 		sort: ['createdAt,desc']
 	})
 	const addFavoriteMutation = useAddFavoriteMutation()
