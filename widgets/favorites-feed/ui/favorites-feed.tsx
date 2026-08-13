@@ -28,6 +28,7 @@ import {
 	type FavoritesSortDirection,
 	type FavoritesSortField
 } from './favorites-toolbar'
+import { FavoritesToolbarSkeleton } from './favorites-toolbar-skeleton'
 
 export function FavoritesFeed() {
 	const [removingId, setRemovingId] = useState<number | null>(null)
@@ -88,6 +89,9 @@ export function FavoritesFeed() {
 					<p className='mt-1 text-sm text-[var(--muted)]'>Квартиры, которые вы сохранили</p>
 				</header>
 
+				{statusesQuery.isPending ? (
+					<FavoritesToolbarSkeleton />
+				) : (
 				<FavoritesToolbar
 					onSortDirectionChange={value => {
 						setSortDirection(value)
@@ -106,6 +110,7 @@ export function FavoritesFeed() {
 					status={status}
 					statuses={statusesQuery.data ?? []}
 				/>
+				)}
 
 				{query.isError ? (
 					<Card className='border-[var(--danger-border)] bg-[var(--danger-bg)] text-[var(--danger-text)] shadow-none'>

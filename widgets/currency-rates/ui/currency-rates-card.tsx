@@ -5,23 +5,16 @@ import {
 	type CurrencyRatesResponse
 } from '@/modules/currency-rate'
 import { Card, CardContent } from '@/shared/ui/card'
+import { CurrencyFlag } from '@/shared/ui/currency-flag'
 
 interface CurrencyRatesCardProps {
 	data: CurrencyRatesResponse
 }
 
-const currencyFlags: Record<string, string> = {
-	BYN: '🇧🇾',
-	EUR: '🇪🇺',
-	USD: '🇺🇸'
-}
-
 function CurrencyCode({ currency }: { currency: string }) {
 	return (
 		<span className='inline-flex items-center gap-1.5 whitespace-nowrap'>
-			<span aria-hidden className='text-lg leading-none'>
-				{currencyFlags[currency] ?? '🌐'}
-			</span>
+			<CurrencyFlag className='size-6' currency={currency} />
 			<span>{currency}</span>
 		</span>
 	)
