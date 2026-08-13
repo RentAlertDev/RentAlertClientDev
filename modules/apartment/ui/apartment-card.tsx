@@ -16,10 +16,11 @@ interface ApartmentCardProps {
 	isFavorite?: boolean
 	isFavoritePending?: boolean
 	onAddFavorite?: () => void
+	usdToBynRate?: number
 }
 
-export function ApartmentCard({ apartment, isFavorite, isFavoritePending, onAddFavorite }: ApartmentCardProps) {
-	const prices = getApartmentPricePair(apartment)
+export function ApartmentCard({ apartment, isFavorite, isFavoritePending, onAddFavorite, usdToBynRate }: ApartmentCardProps) {
+	const prices = getApartmentPricePair(apartment, usdToBynRate)
 	return <Card as='article' className='overflow-hidden'>
 		<div className='relative aspect-[16/10] overflow-hidden bg-[var(--image-surface)]'>
 			<Image alt={apartment.title} className='h-full w-full object-cover' fill sizes='(max-width: 768px) 100vw, 768px' src={apartment.previewPhoto ?? APARTMENT_FALLBACK_PHOTO_URL} />
@@ -33,7 +34,7 @@ export function ApartmentCard({ apartment, isFavorite, isFavoritePending, onAddF
 		<CardContent className='space-y-4'>
 			<div className='flex items-start justify-between gap-4'>
 				<div className='min-w-0 space-y-1'><h2 className='line-clamp-2 text-lg font-semibold leading-snug text-[var(--foreground)]'>{apartment.title}</h2><div className='flex items-center gap-1.5 text-sm text-[var(--muted)]'><MapPin aria-hidden className='size-4 shrink-0' /><span className='truncate'>{apartment.street || 'Адрес не указан'}{apartment.metroStation ? ` · ${apartment.metroStation}` : null}</span></div></div>
-				<div className='shrink-0 text-right'><ApartmentPrice price={prices.primary} /><div className='mt-1 text-[var(--muted)]'><ApartmentPrice price={prices.secondary} size='sm' /></div></div>
+				<div className='shrink-0 text-right'><ApartmentPrice price={prices.primary} />{prices.secondary ? <div className='mt-1 text-[var(--muted)]'><ApartmentPrice price={prices.secondary} size='sm' /></div> : null}</div>
 			</div>
 			<div className='grid grid-cols-2 gap-2 sm:grid-cols-4'><ApartmentFact label='Комнаты' value={formatApartmentRooms(apartment)} /><ApartmentFact label='Площадь' value={formatApartmentArea(apartment.areaTotal)} /><ApartmentFact label='Этаж' value={formatApartmentFloor(apartment)} /><ApartmentFact label='Тип дома' value={formatApartmentHouseType(apartment.houseType)} /></div>
 			<p className='overflow-hidden text-sm leading-6 text-[var(--foreground)]/80 [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:3]'>{apartment.description}</p>

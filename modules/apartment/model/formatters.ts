@@ -1,7 +1,5 @@
 import { ApartmentCurrency, type Apartment } from './types'
 
-const USD_TO_BYN_RATE = 3.27
-
 export interface ApartmentPriceView {
 	amount: string
 	currency: ApartmentCurrency
@@ -9,7 +7,7 @@ export interface ApartmentPriceView {
 
 export interface ApartmentPricePair {
 	primary: ApartmentPriceView
-	secondary: ApartmentPriceView
+	secondary?: ApartmentPriceView
 }
 
 function formatNumber(value: number) {
@@ -44,7 +42,8 @@ export function formatApartmentPrice(
 }
 
 export function getApartmentPricePair(
-	apartment: Apartment
+	apartment: Apartment,
+	usdToBynRate?: number
 ): ApartmentPricePair {
 	if (apartment.currency === ApartmentCurrency.Usd) {
 		return {
@@ -52,19 +51,23 @@ export function getApartmentPricePair(
 				apartment.price,
 				ApartmentCurrency.Usd
 			),
-			secondary: formatApartmentPrice(
-				apartment.price * USD_TO_BYN_RATE,
-				ApartmentCurrency.Byn
-			)
+			secondary: usdToBynRate
+				? formatApartmentPrice(
+						apartment.price * usdToBynRate,
+						ApartmentCurrency.Byn
+					)
+				: undefined
 		}
 	}
 
 	return {
 		primary: formatApartmentPrice(apartment.price, ApartmentCurrency.Byn),
-		secondary: formatApartmentPrice(
-			apartment.price / USD_TO_BYN_RATE,
-			ApartmentCurrency.Usd
-		)
+		secondary: usdToBynRate
+			? formatApartmentPrice(
+					apartment.price / usdToBynRate,
+					ApartmentCurrency.Usd
+				)
+			: undefined
 	}
 }
 

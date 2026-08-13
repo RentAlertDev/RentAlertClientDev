@@ -13,6 +13,10 @@ import {
 	useRemoveFavoriteMutation
 } from '@/modules/favorite'
 import { PaginationControls, usePagination } from '@/modules/pagination'
+import {
+	findCurrencyRate,
+	useCurrencyRatesQuery
+} from '@/modules/currency-rate'
 import { getApiErrorMessage } from '@/shared/api/get-api-error-message'
 import { useScrollToContent } from '@/shared/hooks/use-scroll-to-content'
 import { Button } from '@/shared/ui/button'
@@ -47,6 +51,12 @@ export function FavoritesFeed() {
 		...(status ? { status } : {})
 	})
 	const statusesQuery = useFavoriteStatusesQuery()
+	const currencyRatesQuery = useCurrencyRatesQuery()
+	const usdToBynRate = findCurrencyRate(
+		currencyRatesQuery.data?.rates,
+		'USD',
+		'BYN'
+	)
 	const removeMutation = useRemoveFavoriteMutation()
 	const isLoading = query.isPending && !query.data
 	const listRef = useScrollToContent({
@@ -127,6 +137,7 @@ export function FavoritesFeed() {
 									key={favorite.listing.id}
 									onRemove={() => setRemovingId(favorite.listing.id)}
 									statuses={statusesQuery.data ?? []}
+									usdToBynRate={usdToBynRate}
 								/>
 							))}
 						</div>

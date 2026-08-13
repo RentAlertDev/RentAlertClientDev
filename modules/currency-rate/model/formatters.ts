@@ -18,3 +18,14 @@ export function formatCurrencyRate(value: number) {
 		minimumFractionDigits: 2
 	}).format(value)
 }
+
+export function findCurrencyRate(
+	rates: { currency: string; perCurrency: string; rate: number }[] | undefined,
+	currency: string,
+	perCurrency: string
+) {
+	return rates?.find(
+		rate =>
+			rate.currency === currency && rate.perCurrency === perCurrency
+	)?.rate
+}

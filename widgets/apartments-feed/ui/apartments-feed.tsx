@@ -15,6 +15,10 @@ import {
 	useFavoritesQuery
 } from '@/modules/favorite'
 import { PaginationControls, usePagination } from '@/modules/pagination'
+import {
+	findCurrencyRate,
+	useCurrencyRatesQuery
+} from '@/modules/currency-rate'
 import { UserFilterFormModal } from '@/modules/user-filter'
 import { Button } from '@/shared/ui/button'
 import { getApiErrorMessage } from '@/shared/api/get-api-error-message'
@@ -43,6 +47,12 @@ export function ApartmentsFeed() {
 		size: FAVORITES_MAX_SIZE,
 		sort: ['createdAt,desc']
 	})
+	const currencyRatesQuery = useCurrencyRatesQuery()
+	const usdToBynRate = findCurrencyRate(
+		currencyRatesQuery.data?.rates,
+		'USD',
+		'BYN'
+	)
 	const statusesQuery = useFavoriteStatusesQuery()
 	const addFavoriteMutation = useAddFavoriteMutation()
 	const favoriteIds = new Set(
@@ -150,6 +160,7 @@ export function ApartmentsFeed() {
 									onAddFavorite={() =>
 										addToFavorites(apartment.id)
 									}
+									usdToBynRate={usdToBynRate}
 								/>
 							))}
 						</div>

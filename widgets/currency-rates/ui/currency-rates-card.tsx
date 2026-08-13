@@ -5,6 +5,7 @@ import {
 	type CurrencyRatesResponse
 } from '@/modules/currency-rate'
 import { Card, CardContent } from '@/shared/ui/card'
+import { CurrencySymbol } from '@/shared/ui/currency-symbol'
 
 interface CurrencyRatesCardProps {
 	data: CurrencyRatesResponse
@@ -38,8 +39,8 @@ export function CurrencyRatesCard({ data }: CurrencyRatesCardProps) {
 									<ArrowRightLeft aria-hidden className='size-4' />
 								</div>
 								<div>
-									<div className='text-xs text-[var(--muted)]'>1 {rate.currency}</div>
-									<div className='text-sm font-semibold'>{rate.perCurrency}</div>
+									<div className='flex items-center gap-1 text-xs text-[var(--muted)]'>1 <CurrencySymbol currency={rate.currency} /></div>
+									<div className='flex items-center gap-1 text-sm font-semibold'>за <CurrencySymbol currency={rate.perCurrency} /></div>
 								</div>
 							</div>
 							<div className='text-lg font-semibold tabular-nums'>
