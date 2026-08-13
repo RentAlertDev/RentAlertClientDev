@@ -11,3 +11,4 @@ export type {
 } from './model/types'
 export { ApartmentCurrency, ApartmentSource } from './model/types'
 export { ApartmentCard, ApartmentCardSkeleton } from './ui'
+export { ApartmentsNoActiveFilter } from './ui'

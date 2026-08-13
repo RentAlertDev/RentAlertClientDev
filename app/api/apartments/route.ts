@@ -44,8 +44,16 @@ export async function GET(request: NextRequest) {
 					...authHeaders
 				},
 				params: {
+					...(request.nextUrl.searchParams.get('filter')
+						? { filter: request.nextUrl.searchParams.get('filter') }
+						: {}),
 					page: getPageParam(request),
-					size: getSizeParam(request)
+					size: getSizeParam(request),
+					sort: request.nextUrl.searchParams.getAll('sort'),
+					sources: request.nextUrl.searchParams.getAll('sources')
+				},
+				paramsSerializer: {
+					indexes: null
 				}
 			}
 		)

@@ -13,7 +13,10 @@ export async function getApartments(
 	const response = await httpClient.get<ApartmentsPageResponse>(
 		APARTMENTS_API.root,
 		{
-			params
+			params,
+			paramsSerializer: {
+				indexes: null
+			}
 		}
 	)
 

@@ -15,3 +15,7 @@ export function getApiErrorMessage(error: unknown, fallback: string) {
 
 	return typeof message === 'string' && message.trim() ? message : fallback
 }
+
+export function getApiErrorStatus(error: unknown) {
+	return axios.isAxiosError(error) ? error.response?.status : undefined
+}

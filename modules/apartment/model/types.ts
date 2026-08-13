@@ -85,6 +85,9 @@ export interface ApartmentsPage {
 }
 
 export interface GetApartmentsParams {
+	filter?: string
 	page: number
 	size: number
+	sort?: string[]
+	sources?: string[]
 }

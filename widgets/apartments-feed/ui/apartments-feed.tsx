@@ -1,10 +1,11 @@
 'use client'
 
 import { useState } from 'react'
-import { SlidersHorizontal } from 'lucide-react'
+import { Search, SlidersHorizontal, X } from 'lucide-react'
 import {
 	ApartmentCard,
 	ApartmentCardSkeleton,
+	ApartmentsNoActiveFilter,
 	useApartments
 } from '@/modules/apartment'
 import {
@@ -21,24 +22,32 @@ import {
 } from '@/modules/currency-rate'
 import { UserFilterFormModal } from '@/modules/user-filter'
 import { Button } from '@/shared/ui/button'
-import { getApiErrorMessage } from '@/shared/api/get-api-error-message'
+import {
+	getApiErrorMessage,
+	getApiErrorStatus
+} from '@/shared/api/get-api-error-message'
 import { Card, CardContent } from '@/shared/ui/card'
 import { toast } from '@/shared/ui/toaster'
 import { useScrollToContent } from '@/shared/hooks/use-scroll-to-content'
+import { useDebouncedValue } from '@/shared/hooks/use-debounced-value'
 
 const APARTMENTS_PAGE_SIZE = 10
 
 export function ApartmentsFeed() {
 	const [isFilterModalOpen, setIsFilterModalOpen] = useState(false)
+	const [search, setSearch] = useState('')
+	const debouncedSearch = useDebouncedValue(search.trim(), 400)
 	const {
 		debouncedPage,
 		goToNextPage,
 		goToPage,
 		goToPreviousPage,
 		isPageLocked,
-		page
+		page,
+		resetPage
 	} = usePagination()
 	const apartmentsQuery = useApartments({
+		...(debouncedSearch ? { filter: debouncedSearch } : {}),
 		page: debouncedPage,
 		size: APARTMENTS_PAGE_SIZE
 	})
@@ -84,6 +93,15 @@ export function ApartmentsFeed() {
 		)
 	}
 	const apartments = apartmentsQuery.data?.content ?? []
+	const errorMessage = getApiErrorMessage(
+		apartmentsQuery.error,
+		'Не получилось загрузить квартиры'
+	)
+	const hasNoActiveFilter =
+		apartmentsQuery.isError &&
+		getApiErrorStatus(apartmentsQuery.error) === 404 &&
+		errorMessage.toLocaleLowerCase('ru').includes('активн') &&
+		errorMessage.toLocaleLowerCase('ru').includes('фильтр')
 	const isInitialLoading = apartmentsQuery.isPending && !apartmentsQuery.data
 	const isPageChanging = apartmentsQuery.isFetching && !isInitialLoading
 	const isPaginationDisabled =
@@ -118,13 +136,43 @@ export function ApartmentsFeed() {
 						<SlidersHorizontal aria-hidden className='size-4' />
 						Настроить поиск
 					</Button>
+
+					<label className='relative block'>
+						<span className='sr-only'>Поиск по объявлениям</span>
+						<Search
+							aria-hidden
+							className='pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[var(--muted)]'
+						/>
+						<input
+							className='h-11 w-full rounded-md border border-[var(--card-border)] bg-[var(--card)] pl-10 pr-10 text-sm outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--ring)]'
+							onChange={event => {
+								setSearch(event.target.value)
+								resetPage()
+							}}
+							placeholder='Поиск по адресу и описанию'
+							value={search}
+						/>
+						{search ? (
+							<button
+								aria-label='Очистить поиск'
+								className='absolute right-2 top-1/2 grid size-8 -translate-y-1/2 place-items-center rounded-md text-[var(--muted)] hover:bg-[var(--card-muted)] hover:text-[var(--foreground)]'
+								onClick={() => {
+									setSearch('')
+									resetPage()
+								}}
+								type='button'
+							>
+								<X aria-hidden className='size-4' />
+							</button>
+						) : null}
+					</label>
 				</header>
 
-				{apartmentsQuery.isError ? (
+				{apartmentsQuery.isError && !hasNoActiveFilter ? (
 					<Card className='border-[var(--danger-border)] bg-[var(--danger-bg)] text-[var(--danger-text)] shadow-none'>
 						<CardContent>
 							<div className='font-semibold'>
-								Не получилось загрузить квартиры
+								{errorMessage}
 							</div>
 							<p className='mt-1 text-sm'>
 								Открой приложение заново и попробуй еще раз.
@@ -134,7 +182,12 @@ export function ApartmentsFeed() {
 				) : null}
 
 				<section className='min-h-[520px] scroll-mt-4' ref={listRef}>
-					{isInitialLoading ? (
+					{hasNoActiveFilter ? (
+						<ApartmentsNoActiveFilter
+							message={errorMessage}
+							onConfigure={() => setIsFilterModalOpen(true)}
+						/>
+					) : isInitialLoading ? (
 						<div
 							aria-label='Загружаем квартиры'
 							className='grid w-full gap-4'
@@ -167,7 +220,7 @@ export function ApartmentsFeed() {
 					)}
 				</section>
 
-				<PaginationControls
+				{!hasNoActiveFilter && !apartmentsQuery.isError ? <PaginationControls
 					currentPage={page}
 					isDisabled={isPaginationDisabled}
 					isLastPage={apartmentsQuery.data?.last}
@@ -177,7 +230,7 @@ export function ApartmentsFeed() {
 					}
 					onPreviousPage={goToPreviousPage}
 					totalPages={apartmentsQuery.data?.totalPages}
-				/>
+				/> : null}
 			</div>
 
 			{isFilterModalOpen ? (
@@ -185,7 +238,10 @@ export function ApartmentsFeed() {
 					isOpen={isFilterModalOpen}
 					onClose={() => setIsFilterModalOpen(false)}
 					onError={message => toast.error(message)}
-					onSuccess={message => toast.success(message)}
+					onSuccess={message => {
+						toast.success(message)
+						apartmentsQuery.refetch()
+					}}
 				/>
 			) : null}
 		</main>
