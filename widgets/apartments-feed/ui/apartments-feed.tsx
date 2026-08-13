@@ -134,7 +134,9 @@ export function ApartmentsFeed() {
 						onClick={() => setIsFilterModalOpen(true)}
 					>
 						<SlidersHorizontal aria-hidden className='size-4' />
-						Настроить поиск
+						{hasNoActiveFilter
+							? 'Создать и применить фильтр'
+							: 'Настроить поиск'}
 					</Button>
 
 					<label className='relative block'>
@@ -185,7 +187,6 @@ export function ApartmentsFeed() {
 					{hasNoActiveFilter ? (
 						<ApartmentsNoActiveFilter
 							message={errorMessage}
-							onConfigure={() => setIsFilterModalOpen(true)}
 						/>
 					) : isInitialLoading ? (
 						<div

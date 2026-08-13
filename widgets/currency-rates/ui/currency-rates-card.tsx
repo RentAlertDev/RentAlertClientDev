@@ -5,10 +5,26 @@ import {
 	type CurrencyRatesResponse
 } from '@/modules/currency-rate'
 import { Card, CardContent } from '@/shared/ui/card'
-import { CurrencySymbol } from '@/shared/ui/currency-symbol'
 
 interface CurrencyRatesCardProps {
 	data: CurrencyRatesResponse
+}
+
+const currencyFlags: Record<string, string> = {
+	BYN: '🇧🇾',
+	EUR: '🇪🇺',
+	USD: '🇺🇸'
+}
+
+function CurrencyCode({ currency }: { currency: string }) {
+	return (
+		<span className='inline-flex items-center gap-1.5 whitespace-nowrap'>
+			<span aria-hidden className='text-lg leading-none'>
+				{currencyFlags[currency] ?? '🌐'}
+			</span>
+			<span>{currency}</span>
+		</span>
+	)
 }
 
 export function CurrencyRatesCard({ data }: CurrencyRatesCardProps) {
@@ -39,8 +55,12 @@ export function CurrencyRatesCard({ data }: CurrencyRatesCardProps) {
 									<ArrowRightLeft aria-hidden className='size-4' />
 								</div>
 								<div>
-									<div className='flex items-center gap-1 text-xs text-[var(--muted)]'>1 <CurrencySymbol currency={rate.currency} /></div>
-									<div className='flex items-center gap-1 text-sm font-semibold'>за <CurrencySymbol currency={rate.perCurrency} /></div>
+									<div className='text-xs text-[var(--muted)]'>Валютная пара</div>
+									<div className='mt-1 flex items-center gap-2 text-sm font-semibold'>
+										<CurrencyCode currency={rate.currency} />
+										<span aria-hidden className='text-[var(--muted)]'>→</span>
+										<CurrencyCode currency={rate.perCurrency} />
+									</div>
 								</div>
 							</div>
 							<div className='text-lg font-semibold tabular-nums'>

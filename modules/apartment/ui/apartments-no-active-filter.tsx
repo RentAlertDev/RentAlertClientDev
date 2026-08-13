@@ -1,15 +1,12 @@
-import { BellRing, SlidersHorizontal } from 'lucide-react'
-import { Button } from '@/shared/ui/button'
+import { BellRing } from 'lucide-react'
 import { Card, CardContent } from '@/shared/ui/card'
 
 interface ApartmentsNoActiveFilterProps {
 	message: string
-	onConfigure: () => void
 }
 
 export function ApartmentsNoActiveFilter({
-	message,
-	onConfigure
+	message
 }: ApartmentsNoActiveFilterProps) {
 	return (
 		<Card className='border-[color-mix(in_srgb,var(--ring)_34%,transparent)] bg-[color-mix(in_srgb,var(--ring)_8%,var(--card))] shadow-none'>
@@ -21,10 +18,6 @@ export function ApartmentsNoActiveFilter({
 				<p className='mt-2 max-w-sm text-sm leading-6 text-[var(--muted)]'>
 					{message}
 				</p>
-				<Button className='mt-5' onClick={onConfigure}>
-					<SlidersHorizontal aria-hidden className='size-4' />
-					Создать и применить фильтр
-				</Button>
 			</CardContent>
 		</Card>
 	)
