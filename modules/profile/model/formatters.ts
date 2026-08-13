@@ -22,10 +22,3 @@ export function formatBotStatus(value: string) {
 	return value
 }
 
-export function formatUserRole(value: string) {
-	if (value === 'USER') {
-		return 'Пользователь'
-	}
-
-	return value
-}

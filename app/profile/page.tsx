@@ -1,6 +1,7 @@
 'use client'
 
 import { useProfile } from '@/modules/profile'
+import { useCurrencyRatesQuery } from '@/modules/currency-rate'
 import { useUserFiltersQuery } from '@/modules/user-filter'
 import { Card, CardContent } from '@/shared/ui/card'
 import {
@@ -11,11 +12,19 @@ import {
 	ProfileOverview,
 	ProfileOverviewSkeleton
 } from '@/widgets/profile-overview'
+import {
+	CurrencyRatesCard,
+	CurrencyRatesSkeleton
+} from '@/widgets/currency-rates'
 
 export default function ProfilePage() {
 	const profileQuery = useProfile()
+	const currencyRatesQuery = useCurrencyRatesQuery()
 	const userFiltersQuery = useUserFiltersQuery()
-	const isPageLoading = profileQuery.isPending || userFiltersQuery.isPending
+	const isPageLoading =
+		profileQuery.isPending ||
+		currencyRatesQuery.isPending ||
+		userFiltersQuery.isPending
 
 	return (
 		<main className='min-h-dvh bg-[var(--background)] px-4 py-5 text-[var(--foreground)] sm:px-6'>
@@ -23,6 +32,7 @@ export default function ProfilePage() {
 				{isPageLoading ? (
 					<>
 						<ProfileOverviewSkeleton />
+						<CurrencyRatesSkeleton />
 						<ProfileFiltersSkeleton />
 					</>
 				) : null}
@@ -43,6 +53,9 @@ export default function ProfilePage() {
 				{!isPageLoading && profileQuery.data ? (
 					<>
 						<ProfileOverview profile={profileQuery.data} />
+						{currencyRatesQuery.data ? (
+							<CurrencyRatesCard data={currencyRatesQuery.data} />
+						) : null}
 						<ProfileFilters
 							filters={userFiltersQuery.data ?? []}
 							isError={userFiltersQuery.isError}

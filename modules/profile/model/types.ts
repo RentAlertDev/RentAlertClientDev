@@ -3,6 +3,5 @@ export interface UserProfile {
 	username: string
 	photoUrl?: string
 	botStatus: string
-	role: string
 	lastLogin: string
 }

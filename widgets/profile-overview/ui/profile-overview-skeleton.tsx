@@ -14,8 +14,8 @@ export function ProfileOverviewSkeleton() {
 					<Skeleton className='h-4 w-24' />
 				</div>
 			</div>
-			<div className='grid gap-3 sm:grid-cols-2'>
-				{Array.from({ length: 4 }).map((_, index) => (
+			<div className='grid gap-3 sm:grid-cols-3'>
+				{Array.from({ length: 3 }).map((_, index) => (
 					<div
 						className='rounded-md border border-[var(--card-border)] bg-[var(--card-muted)] p-4'
 						key={index}

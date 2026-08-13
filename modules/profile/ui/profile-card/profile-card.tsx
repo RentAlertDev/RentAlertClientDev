@@ -3,8 +3,7 @@ import { User } from 'lucide-react'
 import { Card, CardContent } from '@/shared/ui/card'
 import {
 	formatBotStatus,
-	formatProfileDate,
-	formatUserRole
+	formatProfileDate
 } from '../../model/formatters'
 import type { UserProfile } from '../../model/types'
 import { ProfileField } from '../profile-field'
@@ -42,15 +41,11 @@ export function ProfileCard({ profile }: ProfileCardProps) {
 					</div>
 				</div>
 
-				<div className='grid gap-3 sm:grid-cols-2'>
+				<div className='grid gap-3 sm:grid-cols-3'>
 					<ProfileField label='Username' value={profile.username} />
 					<ProfileField
 						label='Статус бота'
 						value={formatBotStatus(profile.botStatus)}
-					/>
-					<ProfileField
-						label='Роль'
-						value={formatUserRole(profile.role)}
 					/>
 					<ProfileField
 						label='Последний вход'
