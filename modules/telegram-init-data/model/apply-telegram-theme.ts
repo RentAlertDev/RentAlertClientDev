@@ -17,7 +17,10 @@ const themeVariableMap: Record<keyof TelegramThemeParams, string> = {
 	destructive_text_color: '--tg-theme-destructive-text-color'
 }
 
-export function applyTelegramTheme(themeParams: TelegramThemeParams) {
+export function applyTelegramTheme(
+	themeParams: TelegramThemeParams,
+	colorScheme?: 'light' | 'dark'
+) {
 	const root = document.documentElement
 
 	Object.entries(themeVariableMap).forEach(([themeKey, variableName]) => {
@@ -28,12 +31,7 @@ export function applyTelegramTheme(themeParams: TelegramThemeParams) {
 		}
 	})
 
-	root.style.setProperty(
-		'--background',
-		themeParams.bg_color ?? 'var(--tg-theme-bg-color, #ffffff)'
-	)
-	root.style.setProperty(
-		'--foreground',
-		themeParams.text_color ?? 'var(--tg-theme-text-color, #171717)'
-	)
+	if (colorScheme) {
+		root.dataset.theme = colorScheme
+	}
 }

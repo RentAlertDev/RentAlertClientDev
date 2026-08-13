@@ -115,7 +115,7 @@ export function useTelegramInitData() {
 
 				webApp.ready()
 				webApp.expand()
-				applyTelegramTheme(themeParams)
+				applyTelegramTheme(themeParams, webApp.colorScheme)
 
 				if (!isMounted) {
 					return

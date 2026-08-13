@@ -2,35 +2,36 @@
 @import "tw-animate-css";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-  --surface: var(--tg-theme-secondary-bg-color, #f6f8fb);
-  --border: rgba(15, 23, 42, 0.12);
-  --muted: var(--tg-theme-hint-color, #64748b);
-  --card: var(--tg-theme-section-bg-color, #ffffff);
+  color-scheme: light;
+  --background: #f4f7fb;
+  --foreground: #172033;
+  --surface: #edf2f7;
+  --border: #d9e2ec;
+  --muted: #66758a;
+  --card: #ffffff;
   --card-foreground: var(--foreground);
-  --card-border: color-mix(in srgb, var(--foreground) 14%, transparent);
-  --card-muted: color-mix(in srgb, var(--surface) 76%, var(--card));
-  --card-shadow: rgba(15, 23, 42, 0.08);
-  --image-surface: color-mix(in srgb, var(--foreground) 7%, var(--surface));
-  --success-bg: #ecfdf5;
-  --success-border: rgba(5, 150, 105, 0.58);
-  --success-text: #047857;
-  --danger-bg: #fff1f2;
-  --danger-border: rgba(190, 18, 60, 0.24);
-  --danger-text: #be123c;
+  --card-border: #d9e2ec;
+  --card-muted: #f1f5f9;
+  --card-shadow: rgba(30, 64, 110, 0.09);
+  --image-surface: #e7edf5;
+  --success-bg: #e8f7f1;
+  --success-border: #8bd7bb;
+  --success-text: #087f5b;
+  --danger-bg: #fff0f2;
+  --danger-border: #f2b8c0;
+  --danger-text: #c92a3d;
   --popover: var(--surface);
   --popover-foreground: var(--foreground);
-  --primary: var(--tg-theme-button-color, #171717);
-  --primary-foreground: var(--tg-theme-button-text-color, #ffffff);
+  --primary: #147bf3;
+  --primary-foreground: #ffffff;
   --secondary: var(--surface);
   --secondary-foreground: var(--foreground);
   --muted-foreground: var(--muted);
   --accent: var(--surface);
   --accent-foreground: var(--foreground);
-  --destructive: var(--tg-theme-destructive-text-color, #dc2626);
+  --destructive: #d6374a;
   --input: var(--border);
-  --ring: var(--tg-theme-button-color, #2481cc);
+  --ring: #147bf3;
   --radius: 0.5rem;
 }
 
@@ -61,23 +62,53 @@
   --font-mono: var(--font-geist-mono);
 }
 
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --background: #0e1621;
+  --foreground: #f1f5f9;
+  --surface: #202b36;
+  --border: #31404f;
+  --muted: #91a3b5;
+  --card: #17212b;
+  --card-border: #31404f;
+  --card-muted: #202c38;
+  --card-shadow: rgba(0, 0, 0, 0.34);
+  --image-surface: #25323f;
+  --success-bg: rgba(34, 197, 139, 0.14);
+  --success-border: rgba(91, 224, 174, 0.5);
+  --success-text: #5be0ae;
+  --danger-bg: rgba(239, 71, 91, 0.14);
+  --danger-border: rgba(255, 135, 149, 0.42);
+  --danger-text: #ff8795;
+  --primary: #2d8cff;
+  --primary-foreground: #ffffff;
+  --destructive: #ff6577;
+  --ring: #2d8cff;
+}
+
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-    --surface: var(--tg-theme-secondary-bg-color, #151515);
-    --border: rgba(237, 237, 237, 0.16);
-    --card: var(--tg-theme-section-bg-color, #1f2933);
-    --card-border: color-mix(in srgb, var(--foreground) 16%, transparent);
-    --card-muted: color-mix(in srgb, var(--card) 86%, var(--foreground) 14%);
-    --card-shadow: rgba(0, 0, 0, 0.28);
-    --image-surface: color-mix(in srgb, var(--foreground) 9%, var(--surface));
-    --success-bg: rgba(5, 150, 105, 0.16);
-    --success-border: rgba(52, 211, 153, 0.56);
-    --success-text: #6ee7b7;
-    --danger-bg: rgba(190, 18, 60, 0.16);
-    --danger-border: rgba(251, 113, 133, 0.32);
-    --danger-text: #fda4af;
+  :root:not([data-theme]) {
+    color-scheme: dark;
+    --background: #0e1621;
+    --foreground: #f1f5f9;
+    --surface: #202b36;
+    --border: #31404f;
+    --muted: #91a3b5;
+    --card: #17212b;
+    --card-border: #31404f;
+    --card-muted: #202c38;
+    --card-shadow: rgba(0, 0, 0, 0.34);
+    --image-surface: #25323f;
+    --success-bg: rgba(34, 197, 139, 0.14);
+    --success-border: rgba(91, 224, 174, 0.5);
+    --success-text: #5be0ae;
+    --danger-bg: rgba(239, 71, 91, 0.14);
+    --danger-border: rgba(255, 135, 149, 0.42);
+    --danger-text: #ff8795;
+    --primary: #2d8cff;
+    --primary-foreground: #ffffff;
+    --destructive: #ff6577;
+    --ring: #2d8cff;
   }
 }
 
