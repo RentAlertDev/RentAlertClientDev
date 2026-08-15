@@ -4,6 +4,7 @@ import { useProfile } from '@/modules/profile'
 import { useCurrencyRatesQuery } from '@/modules/currency-rate'
 import { useUserFiltersQuery } from '@/modules/user-filter'
 import { Card, CardContent } from '@/shared/ui/card'
+import { getApiErrorMessage } from '@/shared/api/get-api-error-message'
 import {
 	ProfileFilters,
 	ProfileFiltersSkeleton
@@ -16,6 +17,7 @@ import {
 	CurrencyRatesCard,
 	CurrencyRatesSkeleton
 } from '@/widgets/currency-rates'
+import { LanguageSettingsCard } from '@/widgets/language-settings'
 
 export default function ProfilePage() {
 	const profileQuery = useProfile()
@@ -40,12 +42,8 @@ export default function ProfilePage() {
 				{profileQuery.isError ? (
 					<Card className='border-[var(--danger-border)] bg-[var(--danger-bg)] text-[var(--danger-text)] shadow-none'>
 						<CardContent>
-							<div className='font-semibold'>
-								Не получилось загрузить профиль
-							</div>
-							<p className='mt-1 text-sm'>
-								Открой приложение заново и попробуй еще раз.
-							</p>
+							<div className='font-semibold'>Не удалось загрузить профиль</div>
+							<p className='mt-1 text-sm'>{getApiErrorMessage(profileQuery.error, 'Попробуйте ещё раз.')}</p>
 						</CardContent>
 					</Card>
 				) : null}
@@ -53,12 +51,13 @@ export default function ProfilePage() {
 				{!isPageLoading && profileQuery.data ? (
 					<>
 						<ProfileOverview profile={profileQuery.data} />
+						<LanguageSettingsCard />
 						{currencyRatesQuery.data ? (
 							<CurrencyRatesCard data={currencyRatesQuery.data} />
 						) : null}
 						<ProfileFilters
 							filters={userFiltersQuery.data ?? []}
-							isError={userFiltersQuery.isError}
+							error={userFiltersQuery.error}
 						/>
 					</>
 				) : null}

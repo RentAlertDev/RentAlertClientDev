@@ -176,9 +176,6 @@ export function ApartmentsFeed() {
 							<div className='font-semibold'>
 								{errorMessage}
 							</div>
-							<p className='mt-1 text-sm'>
-								Открой приложение заново и попробуй еще раз.
-							</p>
 						</CardContent>
 					</Card>
 				) : null}

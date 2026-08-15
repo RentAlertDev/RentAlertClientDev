@@ -1,4 +1,5 @@
-import { httpClient } from '@/shared/api/http-client'
+import { httpClient, setHttpAccessToken } from '@/shared/api/http-client'
+import { getAccessToken } from '../model/get-access-token'
 import { TELEGRAM_AUTH_API } from '../model/constants'
 import type {
 	TelegramLoginRequest,
@@ -13,6 +14,8 @@ export async function loginByTelegramInitData(initData: string) {
 	>(TELEGRAM_AUTH_API.login, {
 		initData
 	})
+
+	setHttpAccessToken(getAccessToken(response.data))
 
 	return response.data
 }

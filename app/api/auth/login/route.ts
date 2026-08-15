@@ -13,12 +13,13 @@ export async function POST(request: NextRequest) {
 
 	try {
 		const backendBaseUrl = getRequiredServerEnv('BACKEND_BASE_URL')
+		const language = request.headers.get('accept-language') || 'ru'
 		const response = await axios.post<TelegramLoginResponse>(
 			`${backendBaseUrl}/api/v1/auth/login`,
 			body,
 			{
 				headers: {
-					'Accept-Language': 'ru',
+					'Accept-Language': language,
 					'Content-Type': 'application/json'
 				}
 			}

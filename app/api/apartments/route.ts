@@ -6,6 +6,7 @@ import {
 	getRequiredAuthSessionHeaders
 } from '@/shared/api/auth-session'
 import { getRequiredServerEnv } from '@/shared/config/env.server'
+import { getServerRequestLanguage } from '@/shared/api/request-language.server'
 
 const DEFAULT_PAGE = 0
 const DEFAULT_SIZE = 6
@@ -35,12 +36,13 @@ export async function GET(request: NextRequest) {
 	try {
 		const backendBaseUrl = getRequiredServerEnv('BACKEND_BASE_URL')
 		const authHeaders = await getRequiredAuthSessionHeaders()
+		const language = await getServerRequestLanguage()
 		const response = await axios.get<ApartmentsPageResponse>(
 			`${backendBaseUrl}/api/v1/listings`,
 			{
 				headers: {
 					Accept: 'application/json',
-					'Accept-Language': 'ru',
+					'Accept-Language': language,
 					...authHeaders
 				},
 				params: {

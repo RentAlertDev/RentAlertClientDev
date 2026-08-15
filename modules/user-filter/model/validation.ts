@@ -10,6 +10,7 @@ export const userFilterFormSchema = z
 	.object({
 		areaFrom: requiredNumericField,
 		areaTo: requiredNumericField,
+		currency: z.string().trim().min(1, 'Выберите валюту'),
 		priceFrom: requiredNumericField,
 		priceTo: requiredNumericField,
 		roomsFrom: requiredNumericField,

@@ -7,6 +7,7 @@ import type {
 export const defaultUserFilterFormValues: UserFilterFormValues = {
 	areaFrom: '35',
 	areaTo: '80',
+	currency: 'USD',
 	priceFrom: '500',
 	priceTo: '1500',
 	roomsFrom: '1',
@@ -55,6 +56,7 @@ export function mapFilterToFormValues(
 	return {
 		areaFrom: filter.areaFrom?.toString() ?? '',
 		areaTo: filter.areaTo?.toString() ?? '',
+		currency: filter.currency ?? 'USD',
 		priceFrom: filter.priceFrom?.toString() ?? '',
 		priceTo: filter.priceTo?.toString() ?? '',
 		roomsFrom: filter.roomsFrom?.toString() ?? '',
@@ -65,7 +67,7 @@ export function mapFilterToFormValues(
 export function mapFormValuesToRequest(
 	values: UserFilterFormValues
 ): UserFilterRequest {
-	const request: UserFilterRequest = {}
+	const request: UserFilterRequest = { currency: values.currency }
 	const priceFrom = normalizeNumberInput(values.priceFrom)
 	const priceTo = normalizeNumberInput(values.priceTo)
 	const roomsFrom = normalizeNumberInput(values.roomsFrom)
@@ -101,7 +103,8 @@ export function mapFormValuesToRequest(
 }
 
 export function formatFilterPrice(filter: UserFilter) {
-	return formatRange(filter.priceFrom, filter.priceTo, ' $')
+	const symbols: Record<string, string> = { BYN: ' Br', EUR: ' €', USD: ' $' }
+	return formatRange(filter.priceFrom, filter.priceTo, symbols[filter.currency ?? 'USD'] ?? ` ${filter.currency ?? ''}`)
 }
 
 export function formatFilterRooms(filter: UserFilter) {

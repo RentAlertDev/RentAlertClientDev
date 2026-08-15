@@ -1,4 +1,4 @@
-import { cookies } from 'next/headers'
+import { cookies, headers } from 'next/headers'
 
 export const AUTH_COOKIE_NAME = 'accessToken'
 
@@ -11,8 +11,18 @@ export class AuthTokenMissingError extends Error {
 
 export async function getAuthToken() {
 	const cookieStore = await cookies()
+	const cookieToken = cookieStore.get(AUTH_COOKIE_NAME)?.value
 
-	return cookieStore.get(AUTH_COOKIE_NAME)?.value ?? null
+	if (cookieToken) return cookieToken
+
+	const requestHeaders = await headers()
+	const authorization = requestHeaders.get('authorization')
+
+	if (authorization?.startsWith('Bearer ')) {
+		return authorization.slice(7).trim() || null
+	}
+
+	return null
 }
 
 export async function getAuthSessionHeaders() {

@@ -7,6 +7,7 @@ export interface UserFilter {
 	areaFrom?: number
 	areaTo?: number
 	active?: boolean
+	currency?: string
 	createdAt?: string
 	updatedAt?: string
 }
@@ -18,6 +19,7 @@ export interface UserFilterRequest {
 	roomsTo?: number
 	areaFrom?: number
 	areaTo?: number
+	currency: string
 }
 
 export interface UserFilterFormValues {
@@ -27,4 +29,5 @@ export interface UserFilterFormValues {
 	roomsTo: string
 	areaFrom: string
 	areaTo: string
+	currency: string
 }

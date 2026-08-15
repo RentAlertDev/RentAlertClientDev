@@ -116,7 +116,7 @@ export function FavoritesFeed() {
 					<Card className='border-[var(--danger-border)] bg-[var(--danger-bg)] text-[var(--danger-text)] shadow-none'>
 						<CardContent>
 							<div className='font-semibold'>Не удалось загрузить избранное</div>
-							<p className='mt-1 text-sm'>Проверьте соединение и попробуйте ещё раз.</p>
+							<p className='mt-1 text-sm'>{getApiErrorMessage(query.error, 'Попробуйте ещё раз.')}</p>
 							<Button className='mt-4' onClick={() => query.refetch()} variant='outline'>
 								<RefreshCw aria-hidden className='size-4' />
 								Повторить

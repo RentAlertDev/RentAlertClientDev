@@ -6,17 +6,19 @@ import {
 	getRequiredAuthSessionHeaders
 } from '@/shared/api/auth-session'
 import { getRequiredServerEnv } from '@/shared/config/env.server'
+import { getServerRequestLanguage } from '@/shared/api/request-language.server'
 
 export async function GET() {
 	try {
 		const backendBaseUrl = getRequiredServerEnv('BACKEND_BASE_URL')
 		const authHeaders = await getRequiredAuthSessionHeaders()
+		const language = await getServerRequestLanguage()
 		const response = await axios.get<UserProfile>(
 			`${backendBaseUrl}/api/v1/profiles/me`,
 			{
 				headers: {
 					Accept: 'application/json',
-					'Accept-Language': 'ru',
+					'Accept-Language': language,
 					...authHeaders
 				}
 			}

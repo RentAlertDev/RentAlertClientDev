@@ -8,7 +8,9 @@ import type {
 import type { UserFilterFormValues } from '../model/types'
 
 interface UserFilterFormFieldsProps {
+	currencies: string[]
 	errors: FieldErrors<UserFilterFormValues>
+	isCurrenciesLoading?: boolean
 	register: UseFormRegister<UserFilterFormValues>
 }
 
@@ -52,11 +54,20 @@ const fields: NumberFieldConfig[] = [
 ]
 
 export function UserFilterFormFields({
+	currencies,
 	errors,
+	isCurrenciesLoading,
 	register
 }: UserFilterFormFieldsProps) {
 	return (
 		<div className='grid grid-cols-2 gap-3'>
+			<label className='col-span-2 space-y-2'>
+				<span className='text-sm font-semibold'>Валюта цен</span>
+				<select className='h-11 w-full rounded-md border border-[var(--card-border)] bg-[var(--card-muted)] px-3 text-sm outline-none transition focus:border-[var(--primary)]' disabled={isCurrenciesLoading || currencies.length === 0} {...register('currency')}>
+					{currencies.map(currency => <option key={currency} value={currency}>{currency}</option>)}
+				</select>
+				{errors.currency?.message ? <span className='block text-xs font-medium text-[var(--danger-text)]'>{errors.currency.message}</span> : null}
+			</label>
 			{fields.map(field => (
 				<NumberField
 					error={errors[field.key]?.message}

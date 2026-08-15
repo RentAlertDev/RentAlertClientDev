@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { X } from 'lucide-react'
 import { useForm } from 'react-hook-form'
@@ -18,6 +18,7 @@ import { useCreateUserFilterMutation } from '../hooks/use-create-user-filter-mut
 import { useSetUserFilterActivationMutation } from '../hooks/use-set-user-filter-activation-mutation'
 import { useUpdateUserFilterMutation } from '../hooks/use-update-user-filter-mutation'
 import { UserFilterFormFields } from './user-filter-form-fields'
+import { useAppSettingsQuery } from '@/modules/app-settings'
 
 interface UserFilterFormModalProps {
 	filter?: UserFilter | null
@@ -46,11 +47,15 @@ export function UserFilterFormModal({
 	const createFilterMutation = useCreateUserFilterMutation()
 	const updateFilterMutation = useUpdateUserFilterMutation()
 	const activationMutation = useSetUserFilterActivationMutation()
+	const appSettingsQuery = useAppSettingsQuery()
 	const isEditMode = Boolean(filter)
+	const currencies = useMemo(() => appSettingsQuery.data?.currencies ?? [], [appSettingsQuery.data?.currencies])
 	const isSubmitting =
 		createFilterMutation.isPending ||
 		updateFilterMutation.isPending ||
-		activationMutation.isPending
+		activationMutation.isPending ||
+		appSettingsQuery.isPending ||
+		currencies.length === 0
 
 	useEffect(() => {
 		if (!isOpen) {
@@ -68,6 +73,12 @@ export function UserFilterFormModal({
 			document.documentElement.style.overflow = htmlOverflow
 		}
 	}, [isOpen])
+
+	useEffect(() => {
+		if (!filter && currencies.length > 0 && !currencies.includes(form.getValues('currency'))) {
+			form.setValue('currency', currencies[0])
+		}
+	}, [currencies, filter, form])
 
 	if (!isOpen) {
 		return null
@@ -107,10 +118,8 @@ export function UserFilterFormModal({
 				})
 				onSuccess?.('Фильтр применен')
 				onClose()
-			} catch {
-				onError?.(
-					'Фильтр сохранен, но не удалось его применить'
-				)
+			} catch (error) {
+				onError?.(getApiErrorMessage(error, 'Фильтр сохранён, но применить его не удалось'))
 			}
 		} catch (error) {
 			onError?.(getErrorMessage(error))
@@ -162,8 +171,13 @@ export function UserFilterFormModal({
 							объявлений в Telegram-бот.
 						</InfoNote>
 					) : null}
+					{appSettingsQuery.isError ? (
+						<InfoNote className='mb-4'>{getApiErrorMessage(appSettingsQuery.error, 'Не удалось загрузить список валют.')}</InfoNote>
+					) : null}
 					<UserFilterFormFields
+						currencies={currencies}
 						errors={form.formState.errors}
+						isCurrenciesLoading={appSettingsQuery.isPending}
 						register={form.register}
 					/>
 				</div>

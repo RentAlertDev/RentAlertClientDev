@@ -17,7 +17,7 @@ import {
 
 interface ProfileFiltersProps {
 	filters: UserFilter[]
-	isError?: boolean
+	error?: unknown
 }
 
 function getErrorMessage(error: unknown) {
@@ -26,8 +26,9 @@ function getErrorMessage(error: unknown) {
 
 export function ProfileFilters({
 	filters: initialFilters,
-	isError
+	error
 }: ProfileFiltersProps) {
+	const isError = Boolean(error)
 	const [editingFilter, setEditingFilter] = useState<UserFilter | null>(null)
 	const [deletingFilter, setDeletingFilter] = useState<UserFilter | null>(
 		null
@@ -99,12 +100,8 @@ export function ProfileFilters({
 				{isError ? (
 					<Card className='border-[var(--danger-border)] bg-[var(--danger-bg)] text-[var(--danger-text)] shadow-none'>
 						<CardContent>
-							<div className='font-semibold'>
-								Не получилось загрузить фильтры
-							</div>
-							<p className='mt-1 text-sm'>
-								Открой приложение заново и попробуй еще раз.
-							</p>
+							<div className='font-semibold'>Не удалось загрузить фильтры</div>
+							<p className='mt-1 text-sm'>{getApiErrorMessage(error, 'Попробуйте ещё раз.')}</p>
 						</CardContent>
 					</Card>
 				) : null}
