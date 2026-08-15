@@ -17,7 +17,6 @@ import {
 	CurrencyRatesCard,
 	CurrencyRatesSkeleton
 } from '@/widgets/currency-rates'
-import { LanguageSettingsCard } from '@/widgets/language-settings'
 
 export default function ProfilePage() {
 	const profileQuery = useProfile()
@@ -51,7 +50,6 @@ export default function ProfilePage() {
 				{!isPageLoading && profileQuery.data ? (
 					<>
 						<ProfileOverview profile={profileQuery.data} />
-						<LanguageSettingsCard />
 						{currencyRatesQuery.data ? (
 							<CurrencyRatesCard data={currencyRatesQuery.data} />
 						) : null}
