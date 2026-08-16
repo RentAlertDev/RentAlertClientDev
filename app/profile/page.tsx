@@ -17,6 +17,7 @@ import {
 	CurrencyRatesCard,
 	CurrencyRatesSkeleton
 } from '@/widgets/currency-rates'
+import { ProfileSettingsCard } from '@/widgets/profile-settings'
 
 export default function ProfilePage() {
 	const profileQuery = useProfile()
@@ -50,8 +51,9 @@ export default function ProfilePage() {
 				{!isPageLoading && profileQuery.data ? (
 					<>
 						<ProfileOverview profile={profileQuery.data} />
+						<ProfileSettingsCard profile={profileQuery.data} />
 						{currencyRatesQuery.data ? (
-							<CurrencyRatesCard data={currencyRatesQuery.data} />
+							<CurrencyRatesCard data={currencyRatesQuery.data} key={currencyRatesQuery.data.rateDate} />
 						) : null}
 						<ProfileFilters
 							filters={userFiltersQuery.data ?? []}

@@ -3,4 +3,5 @@ export interface AppSettings {
 	botStatuses: string[]
 	currencies: string[]
 	currencyPairs: string[]
+	notificationEngines: string[]
 }

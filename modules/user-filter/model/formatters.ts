@@ -103,8 +103,7 @@ export function mapFormValuesToRequest(
 }
 
 export function formatFilterPrice(filter: UserFilter) {
-	const symbols: Record<string, string> = { BYN: ' Br', EUR: ' €', USD: ' $' }
-	return formatRange(filter.priceFrom, filter.priceTo, symbols[filter.currency ?? 'USD'] ?? ` ${filter.currency ?? ''}`)
+	return formatRange(filter.priceFrom, filter.priceTo)
 }
 
 export function formatFilterRooms(filter: UserFilter) {

@@ -1,5 +1,6 @@
 import { CalendarDays, CheckCircle2, Pencil, Power, Trash2 } from 'lucide-react'
 import { IconButton } from '@/shared/ui/icon-button'
+import { CurrencySymbol } from '@/shared/ui/currency-symbol'
 import { cn } from '@/shared/lib/utils'
 import {
 	formatFilterArea,
@@ -97,7 +98,7 @@ export function UserFilterCard({
 			<div className='mt-3 grid grid-cols-3 gap-3'>
 				<UserFilterValue
 					label='Цена'
-					value={formatFilterPrice(filter)}
+					value={<span className='inline-flex items-baseline gap-1'>{formatFilterPrice(filter)} <CurrencySymbol currency={filter.currency ?? 'USD'} /></span>}
 				/>
 				<UserFilterValue
 					label='Комнаты'

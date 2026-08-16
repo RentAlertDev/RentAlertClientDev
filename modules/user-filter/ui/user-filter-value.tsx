@@ -1,6 +1,8 @@
+import type { ReactNode } from 'react'
+
 interface UserFilterValueProps {
 	label: string
-	value: string
+	value: ReactNode
 }
 
 export function UserFilterValue({ label, value }: UserFilterValueProps) {
