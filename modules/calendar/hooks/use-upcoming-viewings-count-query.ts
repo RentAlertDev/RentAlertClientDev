@@ -7,12 +7,13 @@ import { getCalendarViewings } from '../api/calendar-api'
 
 export function useUpcomingViewingsCountQuery() {
 	const now = new Date()
+	const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate())
 	const end = new Date(now.getFullYear() + 1, now.getMonth(), now.getDate())
 	return useQuery({
 		queryKey: ['calendar', 'upcoming-count', toDateKey(now)],
 		queryFn: async () => {
-			const events = await getCalendarViewings({ from: toDateKey(now), to: toDateKey(end) })
-			return events.filter(event => event.status === FavoriteStatusName.ViewingScheduled && new Date(event.viewingDate) >= new Date()).length
+			const events = await getCalendarViewings({ from: toDateKey(startOfToday), to: toDateKey(end) })
+			return events.filter(event => event.status === FavoriteStatusName.ViewingScheduled && new Date(event.viewingDate) >= startOfToday).length
 		},
 		staleTime: 30_000
 	})

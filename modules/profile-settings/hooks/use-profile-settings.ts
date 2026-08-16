@@ -14,5 +14,5 @@ export function useUpdateNotificationSettingsMutation() {
 
 export function useUpdateProfileSettingsMutation() {
 	const client = useQueryClient()
-	return useMutation({ mutationFn: updateProfileSettings, onSuccess: data => client.setQueryData(['profile', 'me'], data) })
+	return useMutation({ mutationFn: updateProfileSettings, onSuccess: (data, variables) => client.setQueryData(['profile', 'me'], { ...data, quietFrom: variables.quietFrom ?? undefined, quietTo: variables.quietTo ?? undefined }) })
 }

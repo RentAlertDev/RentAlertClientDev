@@ -1,14 +1,7 @@
-export interface LocalTimeValue {
-	hour: number
-	minute: number
-	second?: number
-	nano?: number
-}
-
 export interface UpdateProfileSettingsRequest {
 	botStatus: string
-	quietFrom: LocalTimeValue
-	quietTo: LocalTimeValue
+	quietFrom: string | null
+	quietTo: string | null
 }
 
 export interface NotificationChannel {

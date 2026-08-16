@@ -4,6 +4,6 @@ export interface UserProfile {
 	photoUrl?: string
 	botStatus: string
 	lastLogin: string
-	quietFrom?: { hour: number; minute: number }
-	quietTo?: { hour: number; minute: number }
+	quietFrom?: string
+	quietTo?: string
 }
