@@ -5,7 +5,13 @@ import { Button } from '@/shared/ui/button'
 interface IconButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 	label: string
 	children: ReactNode
-	variant?: 'surface' | 'primary' | 'danger' | 'overlay' | 'overlayDanger'
+	variant?:
+		| 'surface'
+		| 'primary'
+		| 'success'
+		| 'danger'
+		| 'overlay'
+		| 'overlayDanger'
 }
 
 const variantClasses = {
@@ -13,6 +19,8 @@ const variantClasses = {
 		'border border-[var(--card-border)] bg-[var(--card)] text-[var(--foreground)] hover:bg-[var(--card-muted)]',
 	primary:
 		'border border-transparent bg-[var(--primary)] text-[var(--primary-foreground)] hover:opacity-90',
+	success:
+		'border border-[var(--success-border)] bg-[var(--success-bg)] text-[var(--success-text)] hover:bg-[color-mix(in_srgb,var(--success-bg)_82%,var(--success-text))]',
 	danger:
 		'border border-[var(--danger-border)] bg-[var(--danger-bg)] text-[var(--danger-text)] hover:bg-[color-mix(in_srgb,var(--danger-bg)_82%,var(--danger-text))]',
 	overlay:

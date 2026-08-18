@@ -63,8 +63,11 @@ export function ProfileSettingsCard({ profile }: { profile: UserProfile }) {
 	const [isQuietHoursEnabled, setIsQuietHoursEnabled] = useState(Boolean(profile.quietFrom && profile.quietTo))
 	const [quietFrom, setQuietFrom] = useState(() => timeToInput(profile.quietFrom, '23:00'))
 	const [quietTo, setQuietTo] = useState(() => timeToInput(profile.quietTo, '07:00'))
-	const channels = notificationsQuery.data ?? []
 	const allowedEngines = appSettingsQuery.data?.notificationEngines ?? []
+	const channels = notificationsQuery.data ?? []
+	const visibleChannels = channels.filter(
+		channel => channel.available && allowedEngines.includes(channel.engine)
+	)
 	const isLoading = appSettingsQuery.isPending || notificationsQuery.isPending
 	const error = appSettingsQuery.error ?? notificationsQuery.error
 
@@ -127,86 +130,95 @@ export function ProfileSettingsCard({ profile }: { profile: UserProfile }) {
 
 	return (
 		<Card as='section' className='shadow-none'>
-			<CardContent className='space-y-5'>
-				<div>
-					<div className='flex items-center gap-2 text-sm font-medium text-[var(--muted)]'>
-						<Bell aria-hidden className='size-4' />
-						Уведомления
-					</div>
-					<h2 className='mt-1 text-xl font-semibold'>Настройки доставки</h2>
-				</div>
-
+			<CardContent className='space-y-6'>
 				{error ? (
 					<div className='rounded-md border border-[var(--danger-border)] bg-[var(--danger-bg)] p-3 text-sm text-[var(--danger-text)]'>
 						{getApiErrorMessage(error, 'Не удалось загрузить настройки.')}
 					</div>
 				) : null}
 
-				<div className='rounded-lg border border-[var(--card-border)] bg-[var(--card-muted)] p-3'>
-					<div className='flex items-center justify-between gap-3'>
-						<div className='flex items-center gap-2'>
-							<MoonStar aria-hidden className='size-5 text-[var(--primary)]' />
-							<div>
-								<div className='font-semibold'>Тихий час</div>
-								<div className='text-xs text-[var(--muted)]'>
-									{isQuietHoursEnabled ? 'Уведомления приостановлены в выбранный период' : 'Выключен — уведомления приходят всегда'}
-								</div>
-							</div>
+				<div className='space-y-3'>
+					<div>
+						<div className='flex items-center gap-2 text-sm font-medium text-[var(--muted)]'>
+							<Bot aria-hidden className='size-4' />
+							Настройки бота
 						</div>
-						<ToggleSwitch
-							ariaLabel={isQuietHoursEnabled ? 'Выключить тихий час' : 'Включить тихий час'}
-							disabled={profileMutation.isPending}
-							enabled={isQuietHoursEnabled}
-							onChange={toggleQuietHours}
-						/>
+						<h2 className='mt-1 text-xl font-semibold'>Тихий час и статус бота</h2>
 					</div>
 
-					{isQuietHoursEnabled ? (
-						<div className='mt-4'>
-							<div className='grid grid-cols-2 gap-3'>
-								<TimeField label='Начало' onChange={setQuietFrom} value={quietFrom} />
-								<TimeField label='Окончание' onChange={setQuietTo} value={quietTo} />
+					<div className='rounded-lg border border-[var(--card-border)] bg-[var(--card-muted)] p-3'>
+						<div className='flex items-center justify-between gap-3'>
+							<div className='flex items-center gap-2'>
+								<MoonStar aria-hidden className='size-5 text-[var(--primary)]' />
+								<div>
+									<div className='font-semibold'>Тихий час</div>
+									<div className='text-xs text-[var(--muted)]'>
+										{isQuietHoursEnabled ? 'Уведомления приостановлены в выбранный период' : 'Выключен — уведомления приходят всегда'}
+									</div>
+								</div>
 							</div>
-							<Button className='mt-3 w-full' disabled={profileMutation.isPending} onClick={saveQuietHours}>
-								{profileMutation.isPending ? 'Применяем…' : 'Сохранить время'}
-							</Button>
+							<ToggleSwitch
+								ariaLabel={isQuietHoursEnabled ? 'Выключить тихий час' : 'Включить тихий час'}
+								disabled={profileMutation.isPending}
+								enabled={isQuietHoursEnabled}
+								onChange={toggleQuietHours}
+							/>
 						</div>
-					) : null}
 
-					<label className='mt-4 block space-y-1.5 border-t border-[var(--card-border)] pt-3'>
-						<span className='flex items-center gap-1.5 text-xs font-medium text-[var(--muted)]'>
-							<Bot aria-hidden className='size-3.5' />
-							Статус бота
-						</span>
-						<select
-							className='h-11 w-full rounded-md border border-[var(--card-border)] bg-[var(--card)] px-3 text-sm'
-							disabled={profileMutation.isPending}
-							onChange={event => void changeBotStatus(event.target.value)}
-							value={botStatus}
-						>
-							{(appSettingsQuery.data?.botStatuses ?? []).map(status => (
-								<option key={status} value={status}>{botStatusLabels[status] ?? status}</option>
-							))}
-						</select>
-					</label>
+						{isQuietHoursEnabled ? (
+							<div className='mt-4'>
+								<div className='grid grid-cols-2 gap-3'>
+									<TimeField label='Начало' onChange={setQuietFrom} value={quietFrom} />
+									<TimeField label='Окончание' onChange={setQuietTo} value={quietTo} />
+								</div>
+								<Button className='mt-3 w-full' disabled={profileMutation.isPending} onClick={saveQuietHours}>
+									{profileMutation.isPending ? 'Применяем…' : 'Сохранить время'}
+								</Button>
+							</div>
+						) : null}
+
+						<label className='mt-4 block space-y-1.5 border-t border-[var(--card-border)] pt-3'>
+							<span className='flex items-center gap-1.5 text-xs font-medium text-[var(--muted)]'>
+								<Bot aria-hidden className='size-3.5' />
+								Статус бота
+							</span>
+							<select
+								className='h-11 w-full rounded-md border border-[var(--card-border)] bg-[var(--card)] px-3 text-sm'
+								disabled={profileMutation.isPending}
+								onChange={event => void changeBotStatus(event.target.value)}
+								value={botStatus}
+							>
+								{(appSettingsQuery.data?.botStatuses ?? []).map(status => (
+									<option key={status} value={status}>{botStatusLabels[status] ?? status}</option>
+								))}
+							</select>
+						</label>
+					</div>
 				</div>
 
-				<div className='space-y-2'>
-					{channels.length ? channels.map(channel => {
-						const canUse = channel.available && allowedEngines.includes(channel.engine)
-						return (
+				<div className='space-y-3'>
+					<div>
+						<div className='flex items-center gap-2 text-sm font-medium text-[var(--muted)]'>
+							<Bell aria-hidden className='size-4' />
+							Уведомления
+						</div>
+						<h2 className='mt-1 text-xl font-semibold'>Каналы доставки</h2>
+					</div>
+
+					<div className='space-y-2'>
+						{visibleChannels.length ? visibleChannels.map(channel => (
 							<div className='flex items-center justify-between gap-3 rounded-lg border border-[var(--card-border)] bg-[var(--card-muted)] p-3' key={channel.engine}>
 								<div className='min-w-0'>
 									<div className='font-semibold'>{engineLabels[channel.engine] ?? channel.engine}</div>
 									<div className='text-xs text-[var(--muted)]'>
-										{canUse ? (channel.enabled ? 'Уведомления включены' : 'Уведомления выключены') : 'Канал пока недоступен'}
+										{channel.enabled ? 'Уведомления включены' : 'Уведомления выключены'}
 									</div>
 								</div>
 								<div className='flex items-center gap-1'>
 									{channel.enabled ? (
 										<button
 											className='rounded-md px-2 py-2 text-xs font-semibold text-[var(--primary)] disabled:opacity-50'
-											disabled={channel.default || notificationMutation.isPending || !canUse}
+											disabled={channel.default || notificationMutation.isPending}
 											onClick={() => updateChannel(channel.engine, true, true)}
 											type='button'
 										>
@@ -215,18 +227,18 @@ export function ProfileSettingsCard({ profile }: { profile: UserProfile }) {
 									) : null}
 									<ToggleSwitch
 										ariaLabel={`${channel.enabled ? 'Выключить' : 'Включить'} ${engineLabels[channel.engine] ?? channel.engine}`}
-										disabled={!canUse || notificationMutation.isPending}
+										disabled={notificationMutation.isPending}
 										enabled={channel.enabled}
 										onChange={next => updateChannel(channel.engine, next)}
 									/>
 								</div>
 							</div>
-						)
-					}) : (
-						<div className='rounded-md border border-dashed border-[var(--card-border)] p-4 text-center text-sm text-[var(--muted)]'>
-							Доступных каналов уведомлений пока нет.
-						</div>
-					)}
+						)) : (
+							<div className='rounded-md border border-dashed border-[var(--card-border)] p-4 text-center text-sm text-[var(--muted)]'>
+								Доступных каналов уведомлений пока нет.
+							</div>
+						)}
+					</div>
 				</div>
 			</CardContent>
 		</Card>

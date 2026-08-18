@@ -67,11 +67,12 @@ export function UserFilterCard({
 
 				<div className='flex shrink-0 gap-1'>
 					<IconButton
+						aria-pressed={filter.active}
 						className='size-9'
 						disabled={isActionPending}
-						label={filter.active ? 'Отключить' : 'Применить'}
+						label={filter.active ? 'Отключить фильтр' : 'Включить фильтр'}
 						onClick={() => onToggleActivation(filter)}
-						variant={filter.active ? 'surface' : 'primary'}
+						variant={filter.active ? 'success' : 'surface'}
 					>
 						<Power aria-hidden className='size-4' />
 					</IconButton>
