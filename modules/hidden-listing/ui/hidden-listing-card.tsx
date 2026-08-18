@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import { ExternalLink, EyeOff, MapPin } from 'lucide-react'
+import { ExternalLink, EyeOff, MapPin, RotateCcw } from 'lucide-react'
 import { APARTMENT_FALLBACK_PHOTO_URL } from '@/modules/apartment/model/constants'
 import {
 	formatApartmentArea,
@@ -14,11 +14,13 @@ import { Button } from '@/shared/ui/button'
 import { Card, CardContent } from '@/shared/ui/card'
 
 interface HiddenListingCardProps {
+	isRestoring?: boolean
 	listing: Apartment
+	onRestore: () => void
 	usdToBynRate?: number
 }
 
-export function HiddenListingCard({ listing, usdToBynRate }: HiddenListingCardProps) {
+export function HiddenListingCard({ isRestoring, listing, onRestore, usdToBynRate }: HiddenListingCardProps) {
 	const prices = getApartmentPricePair(listing, usdToBynRate)
 	const address = [listing.street, listing.metroStation].filter(Boolean).join(' · ')
 
@@ -65,16 +67,23 @@ export function HiddenListingCard({ listing, usdToBynRate }: HiddenListingCardPr
 					<ApartmentFact label='Площадь' value={formatApartmentArea(listing.areaTotal)} />
 					<ApartmentFact label='Этаж' value={formatApartmentFloor(listing)} />
 				</div>
-				{listing.sourceUrl ? (
-					<Button
-						className='w-full'
-						onClick={() => window.open(listing.sourceUrl, '_blank', 'noopener,noreferrer')}
-						variant='outline'
-					>
-						<ExternalLink aria-hidden className='size-4' />
-						Открыть
+				<div className='grid grid-cols-2 gap-2'>
+					<Button disabled={isRestoring} onClick={onRestore} variant='outline'>
+						<RotateCcw aria-hidden className='size-4' />
+						{isRestoring ? 'Возвращаем…' : 'Вернуть'}
 					</Button>
-				) : null}
+					{listing.sourceUrl ? (
+						<Button
+							onClick={() => window.open(listing.sourceUrl, '_blank', 'noopener,noreferrer')}
+							variant='outline'
+						>
+							<ExternalLink aria-hidden className='size-4' />
+							Открыть
+						</Button>
+					) : (
+						<span />
+					)}
+				</div>
 			</CardContent>
 		</Card>
 	)

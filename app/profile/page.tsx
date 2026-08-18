@@ -17,9 +17,9 @@ import {
 	CurrencyRatesCard,
 	CurrencyRatesSkeleton
 } from '@/widgets/currency-rates'
+import { FeedbackNavCard } from '@/widgets/feedback-nav-card'
 import { HiddenListingsNavCard } from '@/widgets/hidden-listings-nav-card'
-import { LanguageSettingsCard } from '@/widgets/language-settings'
-import { ProfileSettingsCard } from '@/widgets/profile-settings'
+import { SettingsNavCard } from '@/widgets/settings-nav-card'
 
 export default function ProfilePage() {
 	const profileQuery = useProfile()
@@ -53,9 +53,9 @@ export default function ProfilePage() {
 				{!isPageLoading && profileQuery.data ? (
 					<>
 						<ProfileOverview profile={profileQuery.data} />
-						<ProfileSettingsCard profile={profileQuery.data} />
+						<SettingsNavCard />
 						<HiddenListingsNavCard />
-						<LanguageSettingsCard />
+						<FeedbackNavCard />
 						<ProfileFilters
 							filters={userFiltersQuery.data ?? []}
 							error={userFiltersQuery.error}

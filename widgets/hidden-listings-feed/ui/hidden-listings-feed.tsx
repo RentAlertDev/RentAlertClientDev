@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
 import { ChevronLeft, RefreshCw } from 'lucide-react'
 import {
@@ -7,7 +8,8 @@ import {
 	HiddenListingCard,
 	HiddenListingsEmptyState,
 	HiddenListingsSkeleton,
-	useHiddenListingsQuery
+	useHiddenListingsQuery,
+	useRemoveHiddenListingMutation
 } from '@/modules/hidden-listing'
 import { PaginationControls, usePagination } from '@/modules/pagination'
 import { findCurrencyRate, useCurrencyRatesQuery } from '@/modules/currency-rate'
@@ -15,17 +17,33 @@ import { getApiErrorMessage } from '@/shared/api/get-api-error-message'
 import { useScrollToContent } from '@/shared/hooks/use-scroll-to-content'
 import { Button } from '@/shared/ui/button'
 import { Card, CardContent } from '@/shared/ui/card'
+import { toast } from '@/shared/ui/toaster'
 
 export function HiddenListingsFeed() {
+	const [restoringId, setRestoringId] = useState<number | null>(null)
 	const { goToNextPage, goToPage, goToPreviousPage, isPageLocked, page } = usePagination()
 	const query = useHiddenListingsQuery({ page, size: HIDDEN_LISTINGS_PAGE_SIZE })
 	const currencyRatesQuery = useCurrencyRatesQuery()
 	const usdToBynRate = findCurrencyRate(currencyRatesQuery.data?.rates, 'USD', 'BYN')
+	const removeMutation = useRemoveHiddenListingMutation()
 	const isLoading = query.isPending && !query.data
 	const listRef = useScrollToContent({
 		isReady: !query.isFetching,
 		pageKey: query.data?.number
 	})
+
+	async function handleRestore(listingId: number) {
+		setRestoringId(listingId)
+
+		try {
+			await removeMutation.mutateAsync(listingId)
+			toast.success('Объявление возвращено — уведомления по нему снова активны')
+		} catch (error) {
+			toast.error(getApiErrorMessage(error, 'Не удалось вернуть объявление'))
+		} finally {
+			setRestoringId(null)
+		}
+	}
 
 	return (
 		<main className='min-h-dvh bg-[var(--background)] px-4 py-5 text-[var(--foreground)] sm:px-6'>
@@ -63,7 +81,13 @@ export function HiddenListingsFeed() {
 					) : (
 						<div className='grid gap-4'>
 							{query.data?.content.map(listing => (
-								<HiddenListingCard key={listing.id} listing={listing} usdToBynRate={usdToBynRate} />
+								<HiddenListingCard
+									isRestoring={restoringId === listing.id}
+									key={listing.id}
+									listing={listing}
+									onRestore={() => handleRestore(listing.id)}
+									usdToBynRate={usdToBynRate}
+								/>
 							))}
 						</div>
 					)}
