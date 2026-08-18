@@ -3,7 +3,7 @@ import { Skeleton } from '@/shared/ui/skeleton'
 export function HiddenListingsSkeleton() {
 	return (
 		<div
-			aria-label='Загружаем спрятанные объявления'
+			aria-label='Загружаем скрытые объявления'
 			className='grid gap-4'
 			role='status'
 		>

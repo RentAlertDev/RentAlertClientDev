@@ -56,14 +56,14 @@ export function HiddenListingsFeed() {
 						<ChevronLeft aria-hidden className='size-4' />
 						Профиль
 					</Link>
-					<h1 className='text-3xl font-semibold'>Спрятанные объявления</h1>
+					<h1 className='text-3xl font-semibold'>Скрытые объявления</h1>
 					<p className='text-sm text-[var(--muted)]'>Квартиры, которые вы скрыли через бота</p>
 				</header>
 
 				{query.isError ? (
 					<Card className='border-[var(--danger-border)] bg-[var(--danger-bg)] text-[var(--danger-text)] shadow-none'>
 						<CardContent>
-							<div className='font-semibold'>Не удалось загрузить спрятанные объявления</div>
+							<div className='font-semibold'>Не удалось загрузить скрытые объявления</div>
 							<p className='mt-1 text-sm'>{getApiErrorMessage(query.error, 'Попробуйте ещё раз.')}</p>
 							<Button className='mt-4' onClick={() => query.refetch()} variant='outline'>
 								<RefreshCw aria-hidden className='size-4' />

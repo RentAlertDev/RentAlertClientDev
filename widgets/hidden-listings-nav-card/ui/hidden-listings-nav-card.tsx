@@ -12,7 +12,7 @@ export function HiddenListingsNavCard() {
 							<EyeOff aria-hidden className='size-5' />
 						</div>
 						<div>
-							<h2 className='font-semibold'>Спрятанные объявления</h2>
+							<h2 className='font-semibold'>Скрытые объявления</h2>
 							<p className='text-xs text-[var(--muted)]'>Квартиры, скрытые через бота</p>
 						</div>
 					</div>

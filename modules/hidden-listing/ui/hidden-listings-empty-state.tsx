@@ -8,7 +8,7 @@ export function HiddenListingsEmptyState() {
 				<div className='grid size-14 place-items-center rounded-full bg-[var(--card-muted)] text-[var(--muted)]'>
 					<EyeOff className='size-7' />
 				</div>
-				<h2 className='mt-4 text-lg font-semibold'>Спрятанных объявлений нет</h2>
+				<h2 className='mt-4 text-lg font-semibold'>Скрытых объявлений нет</h2>
 				<p className='mt-1 max-w-xs text-sm text-[var(--muted)]'>
 					Здесь появятся квартиры, которые вы скрыли через бота, чтобы они больше не приходили в уведомлениях.
 				</p>
