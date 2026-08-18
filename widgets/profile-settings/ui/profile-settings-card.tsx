@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { Bell, Bot, MoonStar } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 import type { UserProfile } from '@/modules/profile'
 import { useAppSettingsQuery } from '@/modules/app-settings'
 import { useNotificationSettingsQuery, useUpdateNotificationSettingsMutation, useUpdateProfileSettingsMutation } from '@/modules/profile-settings'
@@ -10,9 +11,6 @@ import { Button } from '@/shared/ui/button'
 import { Card, CardContent } from '@/shared/ui/card'
 import { toast } from '@/shared/ui/toaster'
 import { ProfileSettingsSkeleton } from './profile-settings-skeleton'
-
-const engineLabels: Record<string, string> = { EMAIL: 'Email', PUSH: 'Push', SMS: 'SMS', TELEGRAM_ADMIN: 'Telegram Admin', TELEGRAM_BOT: 'Telegram-бот' }
-const botStatusLabels: Record<string, string> = { ACTIVE: 'Активен', PAUSED: 'Приостановлен', STOPPED: 'Остановлен' }
 
 function timeToInput(value: string | undefined, fallback: string) {
 	return value ? value.slice(0, 5) : fallback
@@ -55,6 +53,7 @@ function ToggleSwitch({ ariaLabel, disabled, enabled, onChange }: { ariaLabel: s
 }
 
 export function ProfileSettingsCard({ profile }: { profile: UserProfile }) {
+	const t = useTranslations('settingsAndNotifications.profileSettingsCard')
 	const appSettingsQuery = useAppSettingsQuery()
 	const notificationsQuery = useNotificationSettingsQuery()
 	const profileMutation = useUpdateProfileSettingsMutation()
@@ -76,9 +75,9 @@ export function ProfileSettingsCard({ profile }: { profile: UserProfile }) {
 	async function saveQuietHours() {
 		try {
 			await profileMutation.mutateAsync({ botStatus, quietFrom: inputToTime(quietFrom), quietTo: inputToTime(quietTo) })
-			toast.success('Настройки тихого часа сохранены')
+			toast.success(t('quietHours.savedToast'))
 		} catch (mutationError) {
-			toast.error(getApiErrorMessage(mutationError, 'Не удалось сохранить настройки'))
+			toast.error(getApiErrorMessage(mutationError, t('quietHours.saveErrorFallback')))
 		}
 	}
 
@@ -91,10 +90,10 @@ export function ProfileSettingsCard({ profile }: { profile: UserProfile }) {
 				quietFrom: enabled ? inputToTime(quietFrom) : null,
 				quietTo: enabled ? inputToTime(quietTo) : null
 			})
-			toast.success(enabled ? 'Тихий час включён' : 'Тихий час выключен — уведомления будут приходить всегда')
+			toast.success(enabled ? t('quietHours.enabledToast') : t('quietHours.disabledToast'))
 		} catch (mutationError) {
 			setIsQuietHoursEnabled(previouslyEnabled)
-			toast.error(getApiErrorMessage(mutationError, 'Не удалось изменить тихий час'))
+			toast.error(getApiErrorMessage(mutationError, t('quietHours.toggleErrorFallback')))
 		}
 	}
 
@@ -107,10 +106,10 @@ export function ProfileSettingsCard({ profile }: { profile: UserProfile }) {
 				quietFrom: isQuietHoursEnabled ? inputToTime(quietFrom) : null,
 				quietTo: isQuietHoursEnabled ? inputToTime(quietTo) : null
 			})
-			toast.success('Статус бота обновлён')
+			toast.success(t('botStatus.updatedToast'))
 		} catch (mutationError) {
 			setBotStatus(previousStatus)
-			toast.error(getApiErrorMessage(mutationError, 'Не удалось изменить статус бота'))
+			toast.error(getApiErrorMessage(mutationError, t('botStatus.errorFallback')))
 		}
 	}
 
@@ -122,10 +121,14 @@ export function ProfileSettingsCard({ profile }: { profile: UserProfile }) {
 		const defaultEngine = makeDefault ? engine : currentDefault ?? enabledEngines[0]
 		try {
 			await notificationMutation.mutateAsync({ enabledEngines, ...(defaultEngine ? { defaultEngine } : {}) })
-			toast.success('Настройки уведомлений обновлены')
+			toast.success(t('channels.updatedToast'))
 		} catch (mutationError) {
-			toast.error(getApiErrorMessage(mutationError, 'Не удалось обновить уведомления'))
+			toast.error(getApiErrorMessage(mutationError, t('channels.errorFallback')))
 		}
+	}
+
+	function engineLabel(engine: string) {
+		return t.has(`channels.engines.${engine}`) ? t(`channels.engines.${engine}`) : engine
 	}
 
 	return (
@@ -133,7 +136,7 @@ export function ProfileSettingsCard({ profile }: { profile: UserProfile }) {
 			<CardContent className='space-y-6'>
 				{error ? (
 					<div className='rounded-md border border-[var(--danger-border)] bg-[var(--danger-bg)] p-3 text-sm text-[var(--danger-text)]'>
-						{getApiErrorMessage(error, 'Не удалось загрузить настройки.')}
+						{getApiErrorMessage(error, t('loadError'))}
 					</div>
 				) : null}
 
@@ -141,9 +144,9 @@ export function ProfileSettingsCard({ profile }: { profile: UserProfile }) {
 					<div>
 						<div className='flex items-center gap-2 text-sm font-medium text-[var(--muted)]'>
 							<Bot aria-hidden className='size-4' />
-							Настройки бота
+							{t('botSettings.eyebrow')}
 						</div>
-						<h2 className='mt-1 text-xl font-semibold'>Тихий час и статус бота</h2>
+						<h2 className='mt-1 text-xl font-semibold'>{t('botSettings.heading')}</h2>
 					</div>
 
 					<div className='rounded-lg border border-[var(--card-border)] bg-[var(--card-muted)] p-3'>
@@ -151,14 +154,14 @@ export function ProfileSettingsCard({ profile }: { profile: UserProfile }) {
 							<div className='flex items-center gap-2'>
 								<MoonStar aria-hidden className='size-5 text-[var(--primary)]' />
 								<div>
-									<div className='font-semibold'>Тихий час</div>
+									<div className='font-semibold'>{t('quietHours.title')}</div>
 									<div className='text-xs text-[var(--muted)]'>
-										{isQuietHoursEnabled ? 'Уведомления приостановлены в выбранный период' : 'Выключен — уведомления приходят всегда'}
+										{isQuietHoursEnabled ? t('quietHours.enabledDescription') : t('quietHours.disabledDescription')}
 									</div>
 								</div>
 							</div>
 							<ToggleSwitch
-								ariaLabel={isQuietHoursEnabled ? 'Выключить тихий час' : 'Включить тихий час'}
+								ariaLabel={isQuietHoursEnabled ? t('quietHours.disableAria') : t('quietHours.enableAria')}
 								disabled={profileMutation.isPending}
 								enabled={isQuietHoursEnabled}
 								onChange={toggleQuietHours}
@@ -168,11 +171,11 @@ export function ProfileSettingsCard({ profile }: { profile: UserProfile }) {
 						{isQuietHoursEnabled ? (
 							<div className='mt-4'>
 								<div className='grid grid-cols-2 gap-3'>
-									<TimeField label='Начало' onChange={setQuietFrom} value={quietFrom} />
-									<TimeField label='Окончание' onChange={setQuietTo} value={quietTo} />
+									<TimeField label={t('quietHours.fromLabel')} onChange={setQuietFrom} value={quietFrom} />
+									<TimeField label={t('quietHours.toLabel')} onChange={setQuietTo} value={quietTo} />
 								</div>
 								<Button className='mt-3 w-full' disabled={profileMutation.isPending} onClick={saveQuietHours}>
-									{profileMutation.isPending ? 'Применяем…' : 'Сохранить время'}
+									{profileMutation.isPending ? t('quietHours.savingButton') : t('quietHours.saveButton')}
 								</Button>
 							</div>
 						) : null}
@@ -180,7 +183,7 @@ export function ProfileSettingsCard({ profile }: { profile: UserProfile }) {
 						<label className='mt-4 block space-y-1.5 border-t border-[var(--card-border)] pt-3'>
 							<span className='flex items-center gap-1.5 text-xs font-medium text-[var(--muted)]'>
 								<Bot aria-hidden className='size-3.5' />
-								Статус бота
+								{t('botStatus.label')}
 							</span>
 							<select
 								className='h-11 w-full rounded-md border border-[var(--card-border)] bg-[var(--card)] px-3 text-sm'
@@ -189,7 +192,7 @@ export function ProfileSettingsCard({ profile }: { profile: UserProfile }) {
 								value={botStatus}
 							>
 								{(appSettingsQuery.data?.botStatuses ?? []).map(status => (
-									<option key={status} value={status}>{botStatusLabels[status] ?? status}</option>
+									<option key={status} value={status}>{t.has(`botStatus.options.${status}`) ? t(`botStatus.options.${status}`) : status}</option>
 								))}
 							</select>
 						</label>
@@ -200,18 +203,18 @@ export function ProfileSettingsCard({ profile }: { profile: UserProfile }) {
 					<div>
 						<div className='flex items-center gap-2 text-sm font-medium text-[var(--muted)]'>
 							<Bell aria-hidden className='size-4' />
-							Уведомления
+							{t('notifications.eyebrow')}
 						</div>
-						<h2 className='mt-1 text-xl font-semibold'>Каналы доставки</h2>
+						<h2 className='mt-1 text-xl font-semibold'>{t('notifications.heading')}</h2>
 					</div>
 
 					<div className='space-y-2'>
 						{visibleChannels.length ? visibleChannels.map(channel => (
 							<div className='flex items-center justify-between gap-3 rounded-lg border border-[var(--card-border)] bg-[var(--card-muted)] p-3' key={channel.engine}>
 								<div className='min-w-0'>
-									<div className='font-semibold'>{engineLabels[channel.engine] ?? channel.engine}</div>
+									<div className='font-semibold'>{engineLabel(channel.engine)}</div>
 									<div className='text-xs text-[var(--muted)]'>
-										{channel.enabled ? 'Уведомления включены' : 'Уведомления выключены'}
+										{channel.enabled ? t('channels.enabledStatus') : t('channels.disabledStatus')}
 									</div>
 								</div>
 								<div className='flex items-center gap-1'>
@@ -222,11 +225,11 @@ export function ProfileSettingsCard({ profile }: { profile: UserProfile }) {
 											onClick={() => updateChannel(channel.engine, true, true)}
 											type='button'
 										>
-											{channel.default ? 'По умолчанию' : 'Сделать основным'}
+											{channel.default ? t('channels.defaultButton') : t('channels.makeDefaultButton')}
 										</button>
 									) : null}
 									<ToggleSwitch
-										ariaLabel={`${channel.enabled ? 'Выключить' : 'Включить'} ${engineLabels[channel.engine] ?? channel.engine}`}
+										ariaLabel={channel.enabled ? t('channels.toggleAriaDisable', { label: engineLabel(channel.engine) }) : t('channels.toggleAriaEnable', { label: engineLabel(channel.engine) })}
 										disabled={notificationMutation.isPending}
 										enabled={channel.enabled}
 										onChange={next => updateChannel(channel.engine, next)}
@@ -235,7 +238,7 @@ export function ProfileSettingsCard({ profile }: { profile: UserProfile }) {
 							</div>
 						)) : (
 							<div className='rounded-md border border-dashed border-[var(--card-border)] p-4 text-center text-sm text-[var(--muted)]'>
-								Доступных каналов уведомлений пока нет.
+								{t('channels.emptyState')}
 							</div>
 						)}
 					</div>

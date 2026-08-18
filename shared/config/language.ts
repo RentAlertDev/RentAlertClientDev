@@ -11,5 +11,5 @@ export type LanguagePreference = (typeof LANGUAGE_OPTIONS)[number]['value']
 
 export function resolveSystemLanguage(language?: string) {
 	const normalized = language?.toLowerCase().split('-')[0]
-	return normalized || DEFAULT_LANGUAGE
+	return normalized === 'en' ? 'en' : DEFAULT_LANGUAGE
 }

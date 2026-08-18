@@ -1,0 +1,74 @@
+{
+	"languageSettingsCard": {
+		"title": "Язык",
+		"subtitle": "Язык интерфейса и сообщений сервера",
+		"selectAriaLabel": "Выбрать язык",
+		"options": {
+			"system": "Как в системе",
+			"ru": "Русский",
+			"en": "English"
+		}
+	},
+	"profileSettingsCard": {
+		"botSettings": {
+			"eyebrow": "Настройки бота",
+			"heading": "Тихий час и статус бота"
+		},
+		"notifications": {
+			"eyebrow": "Уведомления",
+			"heading": "Каналы доставки"
+		},
+		"loadError": "Не удалось загрузить настройки.",
+		"quietHours": {
+			"title": "Тихий час",
+			"enabledDescription": "Уведомления приостановлены в выбранный период",
+			"disabledDescription": "Выключен — уведомления приходят всегда",
+			"enableAria": "Включить тихий час",
+			"disableAria": "Выключить тихий час",
+			"fromLabel": "Начало",
+			"toLabel": "Окончание",
+			"saveButton": "Сохранить время",
+			"savingButton": "Применяем…",
+			"savedToast": "Настройки тихого часа сохранены",
+			"saveErrorFallback": "Не удалось сохранить настройки",
+			"enabledToast": "Тихий час включён",
+			"disabledToast": "Тихий час выключен — уведомления будут приходить всегда",
+			"toggleErrorFallback": "Не удалось изменить тихий час"
+		},
+		"botStatus": {
+			"label": "Статус бота",
+			"updatedToast": "Статус бота обновлён",
+			"errorFallback": "Не удалось изменить статус бота",
+			"options": {
+				"ACTIVE": "Активен",
+				"PAUSED": "Приостановлен",
+				"STOPPED": "Остановлен"
+			}
+		},
+		"channels": {
+			"engines": {
+				"EMAIL": "Email",
+				"PUSH": "Push",
+				"SMS": "SMS",
+				"TELEGRAM_ADMIN": "Telegram Admin",
+				"TELEGRAM_BOT": "Telegram-бот"
+			},
+			"enabledStatus": "Уведомления включены",
+			"disabledStatus": "Уведомления выключены",
+			"makeDefaultButton": "Сделать основным",
+			"defaultButton": "По умолчанию",
+			"toggleAriaEnable": "Включить {label}",
+			"toggleAriaDisable": "Выключить {label}",
+			"updatedToast": "Настройки уведомлений обновлены",
+			"errorFallback": "Не удалось обновить уведомления",
+			"emptyState": "Доступных каналов уведомлений пока нет."
+		}
+	},
+	"settingsPage": {
+		"backLink": "Профиль",
+		"heading": "Настройки",
+		"subtitle": "Уведомления, тихий час и язык интерфейса",
+		"loadErrorTitle": "Не удалось загрузить настройки",
+		"loadErrorFallback": "Попробуйте ещё раз."
+	}
+}

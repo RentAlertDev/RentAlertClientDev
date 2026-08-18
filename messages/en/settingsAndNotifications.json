@@ -1,0 +1,74 @@
+{
+	"languageSettingsCard": {
+		"title": "Language",
+		"subtitle": "Interface and server message language",
+		"selectAriaLabel": "Select language",
+		"options": {
+			"system": "System default",
+			"ru": "Russian",
+			"en": "English"
+		}
+	},
+	"profileSettingsCard": {
+		"botSettings": {
+			"eyebrow": "Bot settings",
+			"heading": "Quiet hours and bot status"
+		},
+		"notifications": {
+			"eyebrow": "Notifications",
+			"heading": "Delivery channels"
+		},
+		"loadError": "Failed to load settings.",
+		"quietHours": {
+			"title": "Quiet hours",
+			"enabledDescription": "Notifications are paused during the selected period",
+			"disabledDescription": "Disabled — notifications arrive at any time",
+			"enableAria": "Enable quiet hours",
+			"disableAria": "Disable quiet hours",
+			"fromLabel": "Start",
+			"toLabel": "End",
+			"saveButton": "Save time",
+			"savingButton": "Applying…",
+			"savedToast": "Quiet hours settings saved",
+			"saveErrorFallback": "Failed to save settings",
+			"enabledToast": "Quiet hours enabled",
+			"disabledToast": "Quiet hours disabled — notifications will always arrive",
+			"toggleErrorFallback": "Failed to change quiet hours"
+		},
+		"botStatus": {
+			"label": "Bot status",
+			"updatedToast": "Bot status updated",
+			"errorFallback": "Failed to change bot status",
+			"options": {
+				"ACTIVE": "Active",
+				"PAUSED": "Paused",
+				"STOPPED": "Stopped"
+			}
+		},
+		"channels": {
+			"engines": {
+				"EMAIL": "Email",
+				"PUSH": "Push",
+				"SMS": "SMS",
+				"TELEGRAM_ADMIN": "Telegram Admin",
+				"TELEGRAM_BOT": "Telegram bot"
+			},
+			"enabledStatus": "Notifications enabled",
+			"disabledStatus": "Notifications disabled",
+			"makeDefaultButton": "Make default",
+			"defaultButton": "Default",
+			"toggleAriaEnable": "Enable {label}",
+			"toggleAriaDisable": "Disable {label}",
+			"updatedToast": "Notification settings updated",
+			"errorFallback": "Failed to update notifications",
+			"emptyState": "No notification channels available yet."
+		}
+	},
+	"settingsPage": {
+		"backLink": "Profile",
+		"heading": "Settings",
+		"subtitle": "Notifications, quiet hours and interface language",
+		"loadErrorTitle": "Failed to load settings",
+		"loadErrorFallback": "Please try again."
+	}
+}
