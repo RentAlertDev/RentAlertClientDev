@@ -17,6 +17,7 @@ import {
 	CurrencyRatesCard,
 	CurrencyRatesSkeleton
 } from '@/widgets/currency-rates'
+import { LanguageSettingsCard } from '@/widgets/language-settings'
 import { ProfileSettingsCard } from '@/widgets/profile-settings'
 
 export default function ProfilePage() {
@@ -34,8 +35,8 @@ export default function ProfilePage() {
 				{isPageLoading ? (
 					<>
 						<ProfileOverviewSkeleton />
-						<CurrencyRatesSkeleton />
 						<ProfileFiltersSkeleton />
+						<CurrencyRatesSkeleton />
 					</>
 				) : null}
 
@@ -52,13 +53,14 @@ export default function ProfilePage() {
 					<>
 						<ProfileOverview profile={profileQuery.data} />
 						<ProfileSettingsCard profile={profileQuery.data} />
-						{currencyRatesQuery.data ? (
-							<CurrencyRatesCard data={currencyRatesQuery.data} key={currencyRatesQuery.data.rateDate} />
-						) : null}
+						<LanguageSettingsCard />
 						<ProfileFilters
 							filters={userFiltersQuery.data ?? []}
 							error={userFiltersQuery.error}
 						/>
+						{currencyRatesQuery.data ? (
+							<CurrencyRatesCard data={currencyRatesQuery.data} key={currencyRatesQuery.data.rateDate} />
+						) : null}
 					</>
 				) : null}
 			</div>
