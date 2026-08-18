@@ -17,6 +17,7 @@ import {
 	CurrencyRatesCard,
 	CurrencyRatesSkeleton
 } from '@/widgets/currency-rates'
+import { HiddenListingsNavCard } from '@/widgets/hidden-listings-nav-card'
 import { LanguageSettingsCard } from '@/widgets/language-settings'
 import { ProfileSettingsCard } from '@/widgets/profile-settings'
 
@@ -53,6 +54,7 @@ export default function ProfilePage() {
 					<>
 						<ProfileOverview profile={profileQuery.data} />
 						<ProfileSettingsCard profile={profileQuery.data} />
+						<HiddenListingsNavCard />
 						<LanguageSettingsCard />
 						<ProfileFilters
 							filters={userFiltersQuery.data ?? []}
