@@ -1,6 +1,8 @@
 export { ApartmentCard } from './apartment-card'
 export { ApartmentCardSkeleton } from './apartment-card-skeleton'
 export { ApartmentsNoActiveFilter } from './apartments-no-active-filter'
+export { ApartmentDetailModal } from './apartment-detail-modal'
 export { ApartmentFact } from './apartment-fact'
 export { ApartmentPhotoCarousel } from './apartment-photo-carousel'
+export { ApartmentPhotoLightbox } from './apartment-photo-lightbox'
 export { ApartmentPrice } from './apartment-price'

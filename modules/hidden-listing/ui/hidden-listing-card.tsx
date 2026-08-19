@@ -1,3 +1,6 @@
+'use client'
+
+import { useState } from 'react'
 import { ExternalLink, EyeOff, MapPin, RotateCcw } from 'lucide-react'
 import {
 	formatApartmentArea,
@@ -6,6 +9,7 @@ import {
 	getApartmentPhotos,
 	getApartmentPricePair
 } from '@/modules/apartment/model/formatters'
+import { ApartmentDetailModal } from '@/modules/apartment/ui/apartment-detail-modal'
 import { ApartmentFact } from '@/modules/apartment/ui/apartment-fact'
 import { ApartmentPhotoCarousel } from '@/modules/apartment/ui/apartment-photo-carousel'
 import { ApartmentPrice } from '@/modules/apartment/ui/apartment-price'
@@ -23,9 +27,23 @@ interface HiddenListingCardProps {
 export function HiddenListingCard({ isRestoring, listing, onRestore, usdToBynRate }: HiddenListingCardProps) {
 	const prices = getApartmentPricePair(listing, usdToBynRate)
 	const address = [listing.street, listing.metroStation].filter(Boolean).join(' · ')
+	const [isDetailOpen, setIsDetailOpen] = useState(false)
 
 	return (
-		<Card as='article' className='overflow-hidden'>
+		<>
+		<Card
+			as='article'
+			className='cursor-pointer overflow-hidden'
+			onClick={() => setIsDetailOpen(true)}
+			onKeyDown={event => {
+				if (event.key === 'Enter' || event.key === ' ') {
+					event.preventDefault()
+					setIsDetailOpen(true)
+				}
+			}}
+			role='button'
+			tabIndex={0}
+		>
 			<div className='relative aspect-[16/9] overflow-hidden bg-[var(--image-surface)] grayscale'>
 				<ApartmentPhotoCarousel alt={listing.title} className='absolute inset-0' photos={getApartmentPhotos(listing)} />
 				<span className='absolute left-3 top-3 rounded-md bg-black/60 px-2.5 py-1 text-xs font-semibold text-white backdrop-blur'>
@@ -61,7 +79,7 @@ export function HiddenListingCard({ isRestoring, listing, onRestore, usdToBynRat
 					<ApartmentFact label='Площадь' value={formatApartmentArea(listing.areaTotal)} />
 					<ApartmentFact label='Этаж' value={formatApartmentFloor(listing)} />
 				</div>
-				<div className='grid grid-cols-2 gap-2'>
+				<div className='grid grid-cols-2 gap-2' onClick={event => event.stopPropagation()}>
 					<Button disabled={isRestoring} onClick={onRestore} variant='outline'>
 						<RotateCcw aria-hidden className='size-4' />
 						{isRestoring ? 'Возвращаем…' : 'Вернуть'}
@@ -80,5 +98,13 @@ export function HiddenListingCard({ isRestoring, listing, onRestore, usdToBynRat
 				</div>
 			</CardContent>
 		</Card>
+
+		<ApartmentDetailModal
+			apartment={listing}
+			isOpen={isDetailOpen}
+			onClose={() => setIsDetailOpen(false)}
+			usdToBynRate={usdToBynRate}
+		/>
+		</>
 	)
 }

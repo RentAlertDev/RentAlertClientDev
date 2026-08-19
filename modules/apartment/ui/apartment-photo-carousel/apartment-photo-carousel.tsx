@@ -10,10 +10,11 @@ import { APARTMENT_FALLBACK_PHOTO_URL } from '../../model/constants'
 interface ApartmentPhotoCarouselProps {
 	alt: string
 	className?: string
+	onPhotoClick?: (index: number) => void
 	photos: string[]
 }
 
-export function ApartmentPhotoCarousel({ alt, className, photos }: ApartmentPhotoCarouselProps) {
+export function ApartmentPhotoCarousel({ alt, className, onPhotoClick, photos }: ApartmentPhotoCarouselProps) {
 	const slides = photos.length > 0 ? photos : [APARTMENT_FALLBACK_PHOTO_URL]
 	const [activeIndex, setActiveIndex] = useState(0)
 	const trackRef = useRef<HTMLDivElement>(null)
@@ -44,6 +45,14 @@ export function ApartmentPhotoCarousel({ alt, className, photos }: ApartmentPhot
 				{slides.map((photo, index) => (
 					<div className='relative h-full w-full shrink-0 snap-start' key={`${photo}-${index}`}>
 						<Image alt={`${alt} — фото ${index + 1}`} className='object-cover' fill priority={index === 0} sizes='(max-width: 768px) 100vw, 768px' src={photo} />
+						{onPhotoClick ? (
+							<button
+								aria-label={`Открыть фото ${index + 1} на весь экран`}
+								className='absolute inset-0 cursor-zoom-in'
+								onClick={event => { event.stopPropagation(); onPhotoClick(index) }}
+								type='button'
+							/>
+						) : null}
 					</div>
 				))}
 			</div>
@@ -51,12 +60,12 @@ export function ApartmentPhotoCarousel({ alt, className, photos }: ApartmentPhot
 			{slides.length > 1 ? (
 				<>
 					<div className='pointer-events-none absolute inset-y-0 left-2 flex items-center opacity-0 transition-opacity group-hover/carousel:opacity-100'>
-						<IconButton className='pointer-events-auto' disabled={activeIndex === 0} label='Предыдущее фото' onClick={() => scrollToIndex(activeIndex - 1)} variant='overlay'>
+						<IconButton className='pointer-events-auto' disabled={activeIndex === 0} label='Предыдущее фото' onClick={event => { event.stopPropagation(); scrollToIndex(activeIndex - 1) }} variant='overlay'>
 							<ChevronLeft aria-hidden className='size-5' />
 						</IconButton>
 					</div>
 					<div className='pointer-events-none absolute inset-y-0 right-2 flex items-center opacity-0 transition-opacity group-hover/carousel:opacity-100'>
-						<IconButton className='pointer-events-auto' disabled={activeIndex === slides.length - 1} label='Следующее фото' onClick={() => scrollToIndex(activeIndex + 1)} variant='overlay'>
+						<IconButton className='pointer-events-auto' disabled={activeIndex === slides.length - 1} label='Следующее фото' onClick={event => { event.stopPropagation(); scrollToIndex(activeIndex + 1) }} variant='overlay'>
 							<ChevronRight aria-hidden className='size-5' />
 						</IconButton>
 					</div>
@@ -69,7 +78,7 @@ export function ApartmentPhotoCarousel({ alt, className, photos }: ApartmentPhot
 									index === activeIndex ? 'w-4 bg-white' : 'w-1.5 hover:bg-white/75'
 								)}
 								key={`${photo}-${index}-dot`}
-								onClick={() => scrollToIndex(index)}
+								onClick={event => { event.stopPropagation(); scrollToIndex(index) }}
 								type='button'
 							/>
 						))}
