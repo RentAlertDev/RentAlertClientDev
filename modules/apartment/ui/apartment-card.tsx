@@ -1,14 +1,13 @@
 'use client'
 
-import Image from 'next/image'
 import { ExternalLink, Heart, MapPin } from 'lucide-react'
 import { Button } from '@/shared/ui/button'
 import { Card, CardContent } from '@/shared/ui/card'
 import { IconButton } from '@/shared/ui/icon-button'
-import { APARTMENT_FALLBACK_PHOTO_URL } from '../model/constants'
-import { formatApartmentArea, formatApartmentFloor, formatApartmentHouseType, formatApartmentRooms, getApartmentPricePair } from '../model/formatters'
+import { formatApartmentArea, formatApartmentFloor, formatApartmentHouseType, formatApartmentRooms, getApartmentPhotos, getApartmentPricePair } from '../model/formatters'
 import type { Apartment } from '../model/types'
 import { ApartmentFact } from './apartment-fact'
+import { ApartmentPhotoCarousel } from './apartment-photo-carousel'
 import { ApartmentPrice } from './apartment-price'
 
 interface ApartmentCardProps {
@@ -23,7 +22,7 @@ export function ApartmentCard({ apartment, isFavorite, isFavoritePending, onAddF
 	const prices = getApartmentPricePair(apartment, usdToBynRate)
 	return <Card as='article' className='overflow-hidden'>
 		<div className='relative aspect-[16/10] overflow-hidden bg-[var(--image-surface)]'>
-			<Image alt={apartment.title} className='h-full w-full object-cover' fill sizes='(max-width: 768px) 100vw, 768px' src={apartment.previewPhoto ?? APARTMENT_FALLBACK_PHOTO_URL} />
+			<ApartmentPhotoCarousel alt={apartment.title} className='absolute inset-0' photos={getApartmentPhotos(apartment)} />
 			<div className='absolute left-3 top-3 rounded-md bg-black/55 px-2.5 py-1 text-xs font-semibold text-white backdrop-blur'>{apartment.source}</div>
 			<div className='absolute right-3 top-3'>
 				<IconButton disabled={isFavorite || isFavoritePending} label={isFavorite ? 'Уже в избранном' : 'Добавить в избранное'} onClick={onAddFavorite} variant='overlay'>

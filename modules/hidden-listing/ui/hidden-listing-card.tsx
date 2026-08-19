@@ -1,13 +1,13 @@
-import Image from 'next/image'
 import { ExternalLink, EyeOff, MapPin, RotateCcw } from 'lucide-react'
-import { APARTMENT_FALLBACK_PHOTO_URL } from '@/modules/apartment/model/constants'
 import {
 	formatApartmentArea,
 	formatApartmentFloor,
 	formatApartmentRooms,
+	getApartmentPhotos,
 	getApartmentPricePair
 } from '@/modules/apartment/model/formatters'
 import { ApartmentFact } from '@/modules/apartment/ui/apartment-fact'
+import { ApartmentPhotoCarousel } from '@/modules/apartment/ui/apartment-photo-carousel'
 import { ApartmentPrice } from '@/modules/apartment/ui/apartment-price'
 import type { Apartment } from '@/modules/apartment/model/types'
 import { Button } from '@/shared/ui/button'
@@ -27,13 +27,7 @@ export function HiddenListingCard({ isRestoring, listing, onRestore, usdToBynRat
 	return (
 		<Card as='article' className='overflow-hidden'>
 			<div className='relative aspect-[16/9] overflow-hidden bg-[var(--image-surface)] grayscale'>
-				<Image
-					alt={listing.title}
-					className='object-cover'
-					fill
-					sizes='(max-width: 768px) 100vw, 768px'
-					src={listing.previewPhoto ?? APARTMENT_FALLBACK_PHOTO_URL}
-				/>
+				<ApartmentPhotoCarousel alt={listing.title} className='absolute inset-0' photos={getApartmentPhotos(listing)} />
 				<span className='absolute left-3 top-3 rounded-md bg-black/60 px-2.5 py-1 text-xs font-semibold text-white backdrop-blur'>
 					{listing.source}
 				</span>

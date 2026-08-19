@@ -1,10 +1,9 @@
 'use client'
 
-import Image from 'next/image'
 import { CalendarDays, ExternalLink, MapPin, Trash2 } from 'lucide-react'
-import { APARTMENT_FALLBACK_PHOTO_URL } from '@/modules/apartment/model/constants'
-import { formatApartmentArea, formatApartmentFloor, formatApartmentRooms } from '@/modules/apartment/model/formatters'
+import { formatApartmentArea, formatApartmentFloor, formatApartmentRooms, getApartmentPhotos } from '@/modules/apartment/model/formatters'
 import { ApartmentFact } from '@/modules/apartment/ui/apartment-fact'
+import { ApartmentPhotoCarousel } from '@/modules/apartment/ui/apartment-photo-carousel'
 import { ApartmentPrice } from '@/modules/apartment/ui/apartment-price'
 import { getApartmentPricePair } from '@/modules/apartment/model/formatters'
 import { Button } from '@/shared/ui/button'
@@ -20,7 +19,7 @@ export function FavoriteCard({ favorite, isRemoving, onRemove, statuses, usdToBy
 	const address = [listing.microdistrict, listing.street, listing.metroStation].filter(Boolean).join(' · ')
 	return <Card as='article' className='overflow-hidden'>
 		<div className='relative aspect-[16/9] overflow-hidden bg-[var(--image-surface)]'>
-			<Image alt={listing.title} className='object-cover' fill sizes='(max-width: 768px) 100vw, 768px' src={listing.previewPhoto ?? APARTMENT_FALLBACK_PHOTO_URL} />
+			<ApartmentPhotoCarousel alt={listing.title} className='absolute inset-0' photos={getApartmentPhotos(listing)} />
 			<span className='absolute left-3 top-3 rounded-md bg-black/60 px-2.5 py-1 text-xs font-semibold text-white backdrop-blur'>{listing.source}</span>
 		</div>
 		<CardContent className='space-y-4'>

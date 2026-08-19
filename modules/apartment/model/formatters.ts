@@ -104,3 +104,11 @@ export function formatApartmentArea(areaTotal?: number) {
 export function formatApartmentHouseType(houseType?: string) {
 	return houseType || 'Не указан'
 }
+
+export function getApartmentPhotos(apartment: Apartment) {
+	if (apartment.photos.length > 0) {
+		return apartment.photos
+	}
+
+	return apartment.previewPhoto ? [apartment.previewPhoto] : []
+}
