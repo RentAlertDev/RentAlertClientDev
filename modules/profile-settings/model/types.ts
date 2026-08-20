@@ -15,3 +15,16 @@ export interface UpdateNotificationSettingsRequest {
 	enabledEngines: string[]
 	defaultEngine?: string
 }
+
+export interface EmailActivationPreparationRequest {
+	email: string
+}
+
+export interface EmailActivationPreparationResponse {
+	requestId: string
+}
+
+export interface EmailActivationConfirmationRequest {
+	requestId: string
+	code: string
+}

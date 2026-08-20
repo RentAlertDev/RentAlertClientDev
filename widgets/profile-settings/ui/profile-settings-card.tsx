@@ -10,6 +10,7 @@ import { getApiErrorMessage } from '@/shared/api/get-api-error-message'
 import { Button } from '@/shared/ui/button'
 import { Card, CardContent } from '@/shared/ui/card'
 import { toast } from '@/shared/ui/toaster'
+import { EmailActivationModal } from './email-activation-modal'
 import { ProfileSettingsSkeleton } from './profile-settings-skeleton'
 
 function timeToInput(value: string | undefined, fallback: string) {
@@ -62,6 +63,7 @@ export function ProfileSettingsCard({ profile }: { profile: UserProfile }) {
 	const [isQuietHoursEnabled, setIsQuietHoursEnabled] = useState(Boolean(profile.quietFrom && profile.quietTo))
 	const [quietFrom, setQuietFrom] = useState(() => timeToInput(profile.quietFrom, '23:00'))
 	const [quietTo, setQuietTo] = useState(() => timeToInput(profile.quietTo, '07:00'))
+	const [isEmailModalOpen, setIsEmailModalOpen] = useState(false)
 	const allowedEngines = appSettingsQuery.data?.notificationEngines ?? []
 	const channels = notificationsQuery.data ?? []
 	const visibleChannels = channels.filter(
@@ -232,7 +234,13 @@ export function ProfileSettingsCard({ profile }: { profile: UserProfile }) {
 										ariaLabel={channel.enabled ? t('channels.toggleAriaDisable', { label: engineLabel(channel.engine) }) : t('channels.toggleAriaEnable', { label: engineLabel(channel.engine) })}
 										disabled={notificationMutation.isPending}
 										enabled={channel.enabled}
-										onChange={next => updateChannel(channel.engine, next)}
+										onChange={next => {
+											if (channel.engine === 'EMAIL' && next) {
+												setIsEmailModalOpen(true)
+												return
+											}
+											updateChannel(channel.engine, next)
+										}}
 									/>
 								</div>
 							</div>
@@ -244,6 +252,18 @@ export function ProfileSettingsCard({ profile }: { profile: UserProfile }) {
 					</div>
 				</div>
 			</CardContent>
+
+			{isEmailModalOpen ? (
+				<EmailActivationModal
+					isOpen
+					onClose={() => setIsEmailModalOpen(false)}
+					onSuccess={() => {
+						setIsEmailModalOpen(false)
+						toast.success(t('emailActivationModal.successToast'))
+						void updateChannel('EMAIL', true)
+					}}
+				/>
+			) : null}
 		</Card>
 	)
 }

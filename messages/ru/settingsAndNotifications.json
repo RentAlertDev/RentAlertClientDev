@@ -62,6 +62,34 @@
 			"updatedToast": "Настройки уведомлений обновлены",
 			"errorFallback": "Не удалось обновить уведомления",
 			"emptyState": "Доступных каналов уведомлений пока нет."
+		},
+		"emailActivationModal": {
+			"eyebrow": "Email",
+			"emailStep": {
+				"heading": "Привязать email",
+				"description": "На указанный адрес придёт письмо с кодом подтверждения. Код будет действовать 60 секунд.",
+				"emailLabel": "Email",
+				"emailPlaceholder": "you@example.com",
+				"emailInvalid": "Введите корректный email",
+				"warning": "Проверьте адрес внимательно: после отправки кода изменить email в этой попытке будет нельзя.",
+				"submitButton": "Отправить код",
+				"submittingButton": "Отправляем…",
+				"errorFallback": "Не удалось отправить код подтверждения"
+			},
+			"codeStep": {
+				"heading": "Подтвердите email",
+				"description": "Мы отправили 6-значный код на {email}",
+				"codeLabel": "Код из письма",
+				"codePlaceholder": "000000",
+				"codeInvalid": "Код должен состоять из 6 цифр",
+				"timerLabel": "Код действителен ещё {seconds} с",
+				"expiredMessage": "Время действия кода истекло. Повторная отправка кода пока недоступна — попробуйте привязать email позже.",
+				"submitButton": "Подтвердить",
+				"submittingButton": "Проверяем…",
+				"errorFallback": "Не удалось подтвердить код"
+			},
+			"closeAria": "Закрыть",
+			"successToast": "Email подтверждён"
 		}
 	},
 	"settingsPage": {

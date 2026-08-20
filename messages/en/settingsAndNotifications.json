@@ -62,6 +62,34 @@
 			"updatedToast": "Notification settings updated",
 			"errorFallback": "Failed to update notifications",
 			"emptyState": "No notification channels available yet."
+		},
+		"emailActivationModal": {
+			"eyebrow": "Email",
+			"emailStep": {
+				"heading": "Link an email",
+				"description": "We'll send a confirmation code to this address. The code is valid for 60 seconds.",
+				"emailLabel": "Email",
+				"emailPlaceholder": "you@example.com",
+				"emailInvalid": "Enter a valid email address",
+				"warning": "Double-check the address: once the code is sent, you won't be able to change the email for this attempt.",
+				"submitButton": "Send code",
+				"submittingButton": "Sending…",
+				"errorFallback": "Failed to send the confirmation code"
+			},
+			"codeStep": {
+				"heading": "Confirm your email",
+				"description": "We sent a 6-digit code to {email}",
+				"codeLabel": "Code from the email",
+				"codePlaceholder": "000000",
+				"codeInvalid": "The code must be 6 digits",
+				"timerLabel": "Code valid for {seconds}s",
+				"expiredMessage": "The code has expired. Resending isn't available yet — please try linking the email again later.",
+				"submitButton": "Confirm",
+				"submittingButton": "Checking…",
+				"errorFallback": "Failed to confirm the code"
+			},
+			"closeAria": "Close",
+			"successToast": "Email confirmed"
 		}
 	},
 	"settingsPage": {
