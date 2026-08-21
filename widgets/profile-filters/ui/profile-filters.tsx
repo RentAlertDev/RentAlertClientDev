@@ -87,18 +87,20 @@ export function ProfileFilters({
 						Сохраненные фильтры
 					</h2>
 				</div>
-				<div className='flex items-center gap-2'>
-					{filters.length ? (
-						<div className='rounded-md bg-[var(--card-muted)] px-2.5 py-1 text-xs font-semibold text-[var(--muted)]'>
-							{filters.length}
-						</div>
-					) : null}
-					<Button className='h-9 px-3' onClick={() => setIsCreateModalOpen(true)}>
-						<Plus aria-hidden className='size-4' />
-						Создать фильтр
-					</Button>
-				</div>
+				{filters.length ? (
+					<div className='rounded-md bg-[var(--card-muted)] px-2.5 py-1 text-xs font-semibold text-[var(--muted)]'>
+						{filters.length}
+					</div>
+				) : null}
 			</div>
+
+			<Button
+				className='mb-4 w-full justify-center sm:w-fit'
+				onClick={() => setIsCreateModalOpen(true)}
+			>
+				<Plus aria-hidden className='size-4' />
+				Создать фильтр
+			</Button>
 
 			<InfoNote className='mb-4'>
 				Активируйте нужный фильтр — только активные фильтры
