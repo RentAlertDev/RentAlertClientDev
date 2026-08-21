@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { ExternalLink, EyeOff, MapPin, RotateCcw } from 'lucide-react'
+import { BedDouble, ExternalLink, EyeOff, Layers3, MapPin, RotateCcw, Ruler } from 'lucide-react'
 import {
 	formatApartmentArea,
 	formatApartmentFloor,
@@ -75,9 +75,9 @@ export function HiddenListingCard({ isRestoring, listing, onRestore, usdToBynRat
 					</div>
 				</div>
 				<div className='grid grid-cols-3 gap-2'>
-					<ApartmentFact label='Комнаты' value={formatApartmentRooms(listing)} />
-					<ApartmentFact label='Площадь' value={formatApartmentArea(listing.areaTotal)} />
-					<ApartmentFact label='Этаж' value={formatApartmentFloor(listing)} />
+					<ApartmentFact icon={BedDouble} label='Комнаты' value={formatApartmentRooms(listing)} />
+					<ApartmentFact icon={Ruler} label='Площадь' value={formatApartmentArea(listing.areaTotal)} />
+					<ApartmentFact icon={Layers3} label='Этаж' value={formatApartmentFloor(listing)} />
 				</div>
 				<div className='grid grid-cols-2 gap-2' onClick={event => event.stopPropagation()}>
 					<Button disabled={isRestoring} onClick={onRestore} variant='outline'>

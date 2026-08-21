@@ -15,6 +15,7 @@ import {
 	useFavoriteStatusesQuery,
 	useFavoritesQuery
 } from '@/modules/favorite'
+import { useHideListingMutation } from '@/modules/hidden-listing'
 import { PaginationControls, usePagination } from '@/modules/pagination'
 import {
 	findCurrencyRate,
@@ -64,9 +65,26 @@ export function ApartmentsFeed() {
 	)
 	const statusesQuery = useFavoriteStatusesQuery()
 	const addFavoriteMutation = useAddFavoriteMutation()
+	const hideListingMutation = useHideListingMutation()
+	const [hiddenIds, setHiddenIds] = useState<Set<number>>(new Set())
 	const favoriteIds = new Set(
 		favoritesQuery.data?.content.map(item => item.listing.id) ?? []
 	)
+	const hideApartment = (listingId: number) => {
+		setHiddenIds(previous => new Set(previous).add(listingId))
+		hideListingMutation.mutate(listingId, {
+			onError: error => {
+				setHiddenIds(previous => {
+					const next = new Set(previous)
+					next.delete(listingId)
+					return next
+				})
+				toast.error(
+					getApiErrorMessage(error, 'Не удалось скрыть объявление')
+				)
+			}
+		})
+	}
 	const addToFavorites = (listingId: number) => {
 		const interestedStatus = statusesQuery.data?.find(
 			status => status.name === FavoriteStatusName.Interested
@@ -92,7 +110,9 @@ export function ApartmentsFeed() {
 			}
 		)
 	}
-	const apartments = apartmentsQuery.data?.content ?? []
+	const apartments = (apartmentsQuery.data?.content ?? []).filter(
+		apartment => !hiddenIds.has(apartment.id)
+	)
 	const errorMessage = getApiErrorMessage(
 		apartmentsQuery.error,
 		'Не получилось загрузить квартиры'
@@ -207,10 +227,15 @@ export function ApartmentsFeed() {
 											addFavoriteMutation.variables
 												?.listingId === apartment.id)
 									}
+									isHiding={
+										hideListingMutation.isPending &&
+										hideListingMutation.variables === apartment.id
+									}
 									key={apartment.id}
 									onAddFavorite={() =>
 										addToFavorites(apartment.id)
 									}
+									onHide={() => hideApartment(apartment.id)}
 									usdToBynRate={usdToBynRate}
 								/>
 							))}

@@ -12,6 +12,7 @@ import {
 	useFavoritesQuery,
 	useRemoveFavoriteMutation
 } from '@/modules/favorite'
+import { useHideListingMutation } from '@/modules/hidden-listing'
 import { PaginationControls, usePagination } from '@/modules/pagination'
 import {
 	findCurrencyRate,
@@ -59,11 +60,32 @@ export function FavoritesFeed() {
 		'BYN'
 	)
 	const removeMutation = useRemoveFavoriteMutation()
+	const hideListingMutation = useHideListingMutation()
+	const [hiddenIds, setHiddenIds] = useState<Set<number>>(new Set())
 	const isLoading = query.isPending && !query.data
 	const listRef = useScrollToContent({
 		isReady: !query.isFetching,
 		pageKey: query.data?.number
 	})
+	const favorites = (query.data?.content ?? []).filter(
+		favorite => !hiddenIds.has(favorite.listing.id)
+	)
+
+	function hideListing(listingId: number) {
+		setHiddenIds(previous => new Set(previous).add(listingId))
+		hideListingMutation.mutate(listingId, {
+			onError: error => {
+				setHiddenIds(previous => {
+					const next = new Set(previous)
+					next.delete(listingId)
+					return next
+				})
+				toast.error(
+					getApiErrorMessage(error, 'Не удалось скрыть объявление')
+				)
+			}
+		})
+	}
 
 	function confirmRemove() {
 		if (removingId === null) return
@@ -132,14 +154,19 @@ export function FavoritesFeed() {
 						<FavoritesEmptyState />
 					) : (
 						<div className='grid gap-4'>
-							{query.data?.content.map(favorite => (
+							{favorites.map(favorite => (
 								<FavoriteCard
 									favorite={favorite}
+									isHiding={
+										hideListingMutation.isPending &&
+										hideListingMutation.variables === favorite.listing.id
+									}
 									isRemoving={
 										removeMutation.isPending &&
 										removingId === favorite.listing.id
 									}
 									key={favorite.listing.id}
+									onHide={() => hideListing(favorite.listing.id)}
 									onRemove={() => setRemovingId(favorite.listing.id)}
 									statuses={statusesQuery.data ?? []}
 									usdToBynRate={usdToBynRate}

@@ -1,11 +1,11 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { ExternalLink, MapPin, X } from 'lucide-react'
+import { BedDouble, ExternalLink, Layers3, MapPin, Ruler, TrainFront, X } from 'lucide-react'
 import { Button } from '@/shared/ui/button'
 import { IconButton } from '@/shared/ui/icon-button'
 import { APARTMENT_FALLBACK_PHOTO_URL } from '../../model/constants'
-import { formatApartmentArea, formatApartmentFloor, formatApartmentHouseType, formatApartmentRooms, getApartmentPhotos, getApartmentPricePair } from '../../model/formatters'
+import { formatApartmentArea, formatApartmentFloor, formatApartmentMetroStation, formatApartmentRooms, getApartmentPhotos, getApartmentPricePair } from '../../model/formatters'
 import type { Apartment } from '../../model/types'
 import { ApartmentFact } from '../apartment-fact'
 import { ApartmentPhotoCarousel } from '../apartment-photo-carousel'
@@ -83,10 +83,7 @@ export function ApartmentDetailModal({ apartment, isOpen, onClose, usdToBynRate 
 							<h2 className='text-lg font-semibold leading-snug'>{apartment.title}</h2>
 							<div className='flex items-center gap-1.5 text-sm text-[var(--muted)]'>
 								<MapPin aria-hidden className='size-4 shrink-0' />
-								<span>
-									{apartment.street || 'Адрес не указан'}
-									{apartment.metroStation ? ` · ${apartment.metroStation}` : null}
-								</span>
+								<span>{apartment.street || 'Адрес не указан'}</span>
 							</div>
 						</div>
 						<div className='shrink-0 text-right'>
@@ -100,10 +97,10 @@ export function ApartmentDetailModal({ apartment, isOpen, onClose, usdToBynRate 
 					</div>
 
 					<div className='grid grid-cols-2 gap-2 sm:grid-cols-4'>
-						<ApartmentFact label='Комнаты' value={formatApartmentRooms(apartment)} />
-						<ApartmentFact label='Площадь' value={formatApartmentArea(apartment.areaTotal)} />
-						<ApartmentFact label='Этаж' value={formatApartmentFloor(apartment)} />
-						<ApartmentFact label='Тип дома' value={formatApartmentHouseType(apartment.houseType)} />
+						<ApartmentFact icon={BedDouble} label='Комнаты' value={formatApartmentRooms(apartment)} />
+						<ApartmentFact icon={Ruler} label='Площадь' value={formatApartmentArea(apartment.areaTotal)} />
+						<ApartmentFact icon={Layers3} label='Этаж' value={formatApartmentFloor(apartment)} />
+						<ApartmentFact icon={TrainFront} label='Метро' value={formatApartmentMetroStation(apartment.metroStation)} />
 					</div>
 
 					<p className='whitespace-pre-line text-sm leading-6 text-[var(--foreground)]/80'>{apartment.description}</p>

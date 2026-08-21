@@ -201,6 +201,7 @@ export function ProfileSettingsCard({ profile }: { profile: UserProfile }) {
 					</div>
 				</div>
 
+				{/* Временно скрыто: информация о каналах уведомлений (вернуть при необходимости)
 				<div className='space-y-3'>
 					<div>
 						<div className='flex items-center gap-2 text-sm font-medium text-[var(--muted)]'>
@@ -251,6 +252,7 @@ export function ProfileSettingsCard({ profile }: { profile: UserProfile }) {
 						)}
 					</div>
 				</div>
+				*/}
 			</CardContent>
 
 			{isEmailModalOpen ? (

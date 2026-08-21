@@ -23,6 +23,10 @@ export async function getHiddenListings(
 	return mapHiddenListingsPageFromApi(response.data)
 }
 
+export async function hideListing(listingId: number) {
+	await httpClient.post(`${HIDDEN_LISTINGS_API}/${listingId}`)
+}
+
 export async function removeFromHidden(listingId: number) {
 	await httpClient.delete(`${HIDDEN_LISTINGS_API}/${listingId}`)
 }

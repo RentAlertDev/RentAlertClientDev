@@ -101,8 +101,8 @@ export function formatApartmentArea(areaTotal?: number) {
 	}).format(areaTotal)} м²`
 }
 
-export function formatApartmentHouseType(houseType?: string) {
-	return houseType || 'Не указан'
+export function formatApartmentMetroStation(metroStation?: string) {
+	return metroStation || 'Не указана'
 }
 
 export function getApartmentPhotos(apartment: Apartment) {
