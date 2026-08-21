@@ -5,6 +5,7 @@ export const mockApartments: Apartment[] = [
 		id: 10380,
 		source: ApartmentSource.Realt,
 		sourceUrl: 'https://realt.by/rent-flat-for-long/object/4157758',
+		parsedAt: '2026-08-21T09:15:00Z',
 		title: 'Уютная двухкомнатная квартира у Каменной горки',
 		description:
 			'Светлая квартира с отдельной спальней, кухней-гостиной и теплой лоджией. Есть мебель, техника и быстрый выезд к метро.',

@@ -13,6 +13,7 @@ export interface Apartment {
 	id: number
 	source: ApartmentSource | string
 	sourceUrl: string
+	parsedAt: string
 	title: string
 	description: string
 	microdistrict?: string
@@ -35,6 +36,7 @@ export interface ApartmentApiItem {
 	id: number
 	source: string
 	sourceUrl: string
+	parsedAt: string
 	title?: string
 	description?: string
 	microdistrict?: string

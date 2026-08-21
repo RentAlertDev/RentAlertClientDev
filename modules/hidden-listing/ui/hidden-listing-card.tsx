@@ -1,10 +1,11 @@
 'use client'
 
 import { useState } from 'react'
-import { BedDouble, ExternalLink, EyeOff, Layers3, MapPin, RotateCcw, Ruler } from 'lucide-react'
+import { BedDouble, Clock3, ExternalLink, EyeOff, Layers3, MapPin, RotateCcw, Ruler } from 'lucide-react'
 import {
 	formatApartmentArea,
 	formatApartmentFloor,
+	formatApartmentParsedAt,
 	formatApartmentRooms,
 	getApartmentPhotos,
 	getApartmentPricePair
@@ -27,6 +28,7 @@ interface HiddenListingCardProps {
 export function HiddenListingCard({ isRestoring, listing, onRestore, usdToBynRate }: HiddenListingCardProps) {
 	const prices = getApartmentPricePair(listing, usdToBynRate)
 	const address = [listing.street, listing.metroStation].filter(Boolean).join(' · ')
+	const parsedAtLabel = formatApartmentParsedAt(listing.parsedAt)
 	const [isDetailOpen, setIsDetailOpen] = useState(false)
 
 	return (
@@ -79,6 +81,12 @@ export function HiddenListingCard({ isRestoring, listing, onRestore, usdToBynRat
 					<ApartmentFact icon={Ruler} label='Площадь' value={formatApartmentArea(listing.areaTotal)} />
 					<ApartmentFact icon={Layers3} label='Этаж' value={formatApartmentFloor(listing)} />
 				</div>
+				{parsedAtLabel ? (
+					<div className='flex items-center gap-1.5 text-xs text-[var(--muted)]'>
+						<Clock3 aria-hidden className='size-3.5' />
+						Объявление получено {parsedAtLabel}
+					</div>
+				) : null}
 				<div className='grid grid-cols-2 gap-2' onClick={event => event.stopPropagation()}>
 					<Button disabled={isRestoring} onClick={onRestore} variant='outline'>
 						<RotateCcw aria-hidden className='size-4' />

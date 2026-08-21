@@ -49,6 +49,7 @@ export function mapApartmentFromApi(apartment: ApartmentApiItem): Apartment {
 		id: apartment.id,
 		source: apartment.source,
 		sourceUrl: apartment.sourceUrl,
+		parsedAt: apartment.parsedAt,
 		title: title || description || 'Квартира без названия',
 		description: description || title || 'Описание пока не указано',
 		microdistrict: normalizeText(apartment.microdistrict),

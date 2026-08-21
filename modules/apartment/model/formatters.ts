@@ -105,6 +105,23 @@ export function formatApartmentMetroStation(metroStation?: string) {
 	return metroStation || 'Не указана'
 }
 
+export function formatApartmentParsedAt(parsedAt?: string) {
+	if (!parsedAt) {
+		return null
+	}
+
+	const date = new Date(parsedAt)
+
+	if (Number.isNaN(date.getTime())) {
+		return null
+	}
+
+	return new Intl.DateTimeFormat('ru-RU', {
+		dateStyle: 'medium',
+		timeStyle: 'short'
+	}).format(date)
+}
+
 export function getApartmentPhotos(apartment: Apartment) {
 	if (apartment.photos.length > 0) {
 		return apartment.photos

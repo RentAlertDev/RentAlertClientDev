@@ -1,11 +1,11 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { BedDouble, ExternalLink, Layers3, MapPin, Ruler, TrainFront, X } from 'lucide-react'
+import { BedDouble, Clock3, ExternalLink, Layers3, MapPin, Ruler, TrainFront, X } from 'lucide-react'
 import { Button } from '@/shared/ui/button'
 import { IconButton } from '@/shared/ui/icon-button'
 import { APARTMENT_FALLBACK_PHOTO_URL } from '../../model/constants'
-import { formatApartmentArea, formatApartmentFloor, formatApartmentMetroStation, formatApartmentRooms, getApartmentPhotos, getApartmentPricePair } from '../../model/formatters'
+import { formatApartmentArea, formatApartmentFloor, formatApartmentMetroStation, formatApartmentParsedAt, formatApartmentRooms, getApartmentPhotos, getApartmentPricePair } from '../../model/formatters'
 import type { Apartment } from '../../model/types'
 import { ApartmentFact } from '../apartment-fact'
 import { ApartmentPhotoCarousel } from '../apartment-photo-carousel'
@@ -21,6 +21,7 @@ interface ApartmentDetailModalProps {
 
 export function ApartmentDetailModal({ apartment, isOpen, onClose, usdToBynRate }: ApartmentDetailModalProps) {
 	const prices = getApartmentPricePair(apartment, usdToBynRate)
+	const parsedAtLabel = formatApartmentParsedAt(apartment.parsedAt)
 	const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
 	const photos = getApartmentPhotos(apartment)
 	const slides = photos.length > 0 ? photos : [APARTMENT_FALLBACK_PHOTO_URL]
@@ -104,6 +105,13 @@ export function ApartmentDetailModal({ apartment, isOpen, onClose, usdToBynRate 
 					</div>
 
 					<p className='whitespace-pre-line text-sm leading-6 text-[var(--foreground)]/80'>{apartment.description}</p>
+
+					{parsedAtLabel ? (
+						<div className='flex items-center gap-1.5 text-xs text-[var(--muted)]'>
+							<Clock3 aria-hidden className='size-3.5' />
+							Объявление получено {parsedAtLabel}
+						</div>
+					) : null}
 
 					{apartment.sourceUrl ? (
 						<Button

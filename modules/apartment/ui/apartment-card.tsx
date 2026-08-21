@@ -1,11 +1,11 @@
 'use client'
 
 import { useState } from 'react'
-import { BedDouble, ExternalLink, EyeOff, Heart, Layers3, MapPin, Ruler, TrainFront } from 'lucide-react'
+import { BedDouble, Clock3, ExternalLink, EyeOff, Heart, Layers3, MapPin, Ruler, TrainFront } from 'lucide-react'
 import { Button } from '@/shared/ui/button'
 import { Card, CardContent } from '@/shared/ui/card'
 import { IconButton } from '@/shared/ui/icon-button'
-import { formatApartmentArea, formatApartmentFloor, formatApartmentMetroStation, formatApartmentRooms, getApartmentPhotos, getApartmentPricePair } from '../model/formatters'
+import { formatApartmentArea, formatApartmentFloor, formatApartmentMetroStation, formatApartmentParsedAt, formatApartmentRooms, getApartmentPhotos, getApartmentPricePair } from '../model/formatters'
 import type { Apartment } from '../model/types'
 import { ApartmentDetailModal } from './apartment-detail-modal'
 import { ApartmentFact } from './apartment-fact'
@@ -24,6 +24,7 @@ interface ApartmentCardProps {
 
 export function ApartmentCard({ apartment, isFavorite, isFavoritePending, isHiding, onAddFavorite, onHide, usdToBynRate }: ApartmentCardProps) {
 	const prices = getApartmentPricePair(apartment, usdToBynRate)
+	const parsedAtLabel = formatApartmentParsedAt(apartment.parsedAt)
 	const [isDetailOpen, setIsDetailOpen] = useState(false)
 	return <>
 		<Card
@@ -58,6 +59,12 @@ export function ApartmentCard({ apartment, isFavorite, isFavoritePending, isHidi
 				</div>
 				<div className='grid grid-cols-2 gap-2 sm:grid-cols-4'><ApartmentFact icon={BedDouble} label='Комнаты' value={formatApartmentRooms(apartment)} /><ApartmentFact icon={Ruler} label='Площадь' value={formatApartmentArea(apartment.areaTotal)} /><ApartmentFact icon={Layers3} label='Этаж' value={formatApartmentFloor(apartment)} /><ApartmentFact icon={TrainFront} label='Метро' value={formatApartmentMetroStation(apartment.metroStation)} /></div>
 				<p className='overflow-hidden text-sm leading-6 text-[var(--foreground)]/80 [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:3]'>{apartment.description}</p>
+				{parsedAtLabel ? (
+					<div className='flex items-center gap-1.5 text-xs text-[var(--muted)]'>
+						<Clock3 aria-hidden className='size-3.5' />
+						Объявление получено {parsedAtLabel}
+					</div>
+				) : null}
 				{apartment.sourceUrl ? (
 					<Button
 						className='w-full'
