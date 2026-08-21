@@ -1,6 +1,8 @@
 'use client'
 
 import { useMemo, useState } from 'react'
+import { Plus } from 'lucide-react'
+import { Button } from '@/shared/ui/button'
 import { Card, CardContent } from '@/shared/ui/card'
 import { getApiErrorMessage } from '@/shared/api/get-api-error-message'
 import { ConfirmDialog } from '@/shared/ui/confirm-dialog'
@@ -29,6 +31,7 @@ export function ProfileFilters({
 	error
 }: ProfileFiltersProps) {
 	const isError = Boolean(error)
+	const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
 	const [editingFilter, setEditingFilter] = useState<UserFilter | null>(null)
 	const [deletingFilter, setDeletingFilter] = useState<UserFilter | null>(
 		null
@@ -84,11 +87,17 @@ export function ProfileFilters({
 						Сохраненные фильтры
 					</h2>
 				</div>
-				{filters.length ? (
-					<div className='rounded-md bg-[var(--card-muted)] px-2.5 py-1 text-xs font-semibold text-[var(--muted)]'>
-						{filters.length}
-					</div>
-				) : null}
+				<div className='flex items-center gap-2'>
+					{filters.length ? (
+						<div className='rounded-md bg-[var(--card-muted)] px-2.5 py-1 text-xs font-semibold text-[var(--muted)]'>
+							{filters.length}
+						</div>
+					) : null}
+					<Button className='h-9 px-3' onClick={() => setIsCreateModalOpen(true)}>
+						<Plus aria-hidden className='size-4' />
+						Создать фильтр
+					</Button>
+				</div>
 			</div>
 
 			<InfoNote className='mb-4'>
@@ -107,7 +116,7 @@ export function ProfileFilters({
 				) : null}
 
 				{!isError && filters.length === 0 ? (
-					<UserFilterEmptyState />
+					<UserFilterEmptyState onCreate={() => setIsCreateModalOpen(true)} />
 				) : null}
 
 				{filters.length ? (
@@ -131,6 +140,15 @@ export function ProfileFilters({
 					filter={editingFilter}
 					isOpen={Boolean(editingFilter)}
 					onClose={() => setEditingFilter(null)}
+					onError={message => toast.error(message)}
+					onSuccess={message => toast.success(message)}
+				/>
+			) : null}
+
+			{isCreateModalOpen ? (
+				<UserFilterFormModal
+					isOpen={isCreateModalOpen}
+					onClose={() => setIsCreateModalOpen(false)}
 					onError={message => toast.error(message)}
 					onSuccess={message => toast.success(message)}
 				/>
