@@ -11,5 +11,5 @@ export type {
 } from './model/types'
 export { APARTMENT_SOURCE_LABELS } from './model/constants'
 export { ApartmentCurrency, ApartmentSortValue, ApartmentSource } from './model/types'
-export { ApartmentCard, ApartmentCardSkeleton } from './ui'
+export { ApartmentCard, ApartmentCardSkeleton, ApartmentSortFilterModal } from './ui'
 export { ApartmentsNoActiveFilter } from './ui'

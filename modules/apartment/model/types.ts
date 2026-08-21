@@ -5,8 +5,10 @@ export enum ApartmentSource {
 }
 
 export enum ApartmentSortValue {
-	SourceAsc = 'source,asc',
-	SourceDesc = 'source,desc'
+	PriceAsc = 'price,asc',
+	PriceDesc = 'price,desc',
+	ParsedAtAsc = 'parsedAt,asc',
+	ParsedAtDesc = 'parsedAt,desc'
 }
 
 export enum ApartmentCurrency {

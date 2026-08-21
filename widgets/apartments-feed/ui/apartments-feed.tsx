@@ -1,12 +1,13 @@
 'use client'
 
 import { useState } from 'react'
-import { ArrowUpDown, Search, SlidersHorizontal, X } from 'lucide-react'
+import { ListFilter, Search, SlidersHorizontal, X } from 'lucide-react'
 import {
-	APARTMENT_SOURCE_LABELS,
 	ApartmentCard,
 	ApartmentCardSkeleton,
+	ApartmentSortFilterModal,
 	ApartmentSortValue,
+	ApartmentSource,
 	ApartmentsNoActiveFilter,
 	useApartments
 } from '@/modules/apartment'
@@ -38,8 +39,10 @@ const APARTMENTS_PAGE_SIZE = 10
 
 export function ApartmentsFeed() {
 	const [isFilterModalOpen, setIsFilterModalOpen] = useState(false)
+	const [isSortFilterModalOpen, setIsSortFilterModalOpen] = useState(false)
 	const [search, setSearch] = useState('')
 	const [sort, setSort] = useState<ApartmentSortValue | ''>('')
+	const [sources, setSources] = useState<ApartmentSource[]>([])
 	const debouncedSearch = useDebouncedValue(search.trim(), 400)
 	const {
 		debouncedPage,
@@ -53,9 +56,19 @@ export function ApartmentsFeed() {
 	const apartmentsQuery = useApartments({
 		...(debouncedSearch ? { filter: debouncedSearch } : {}),
 		...(sort ? { sort: [sort] } : {}),
+		...(sources.length ? { sources } : {}),
 		page: debouncedPage,
 		size: APARTMENTS_PAGE_SIZE
 	})
+	const activeSortFilterCount = sources.length + (sort ? 1 : 0)
+	function handleSortChange(nextSort: ApartmentSortValue | '') {
+		setSort(nextSort)
+		resetPage()
+	}
+	function handleSourcesChange(nextSources: ApartmentSource[]) {
+		setSources(nextSources)
+		resetPage()
+	}
 	const favoritesQuery = useFavoritesQuery({
 		page: 0,
 		size: FAVORITES_MAX_SIZE,
@@ -193,28 +206,19 @@ export function ApartmentsFeed() {
 						) : null}
 					</label>
 
-					<label className='block'>
-						<span className='mb-1.5 flex items-center gap-1 text-xs font-medium text-[var(--muted)]'>
-							<ArrowUpDown aria-hidden className='size-3.5' />
-							Сортировка
-						</span>
-						<select
-							className='h-11 w-full rounded-md border border-[var(--card-border)] bg-[var(--card)] px-3 text-sm font-medium text-[var(--foreground)] outline-none transition focus:border-[var(--ring)] sm:w-fit'
-							onChange={event => {
-								setSort(event.target.value as ApartmentSortValue | '')
-								resetPage()
-							}}
-							value={sort}
-						>
-							<option value=''>Без сортировки</option>
-							<option value={ApartmentSortValue.SourceAsc}>
-								Провайдер: {APARTMENT_SOURCE_LABELS.KUFAR} → {APARTMENT_SOURCE_LABELS.ONLINER} → {APARTMENT_SOURCE_LABELS.REALT}
-							</option>
-							<option value={ApartmentSortValue.SourceDesc}>
-								Провайдер: {APARTMENT_SOURCE_LABELS.REALT} → {APARTMENT_SOURCE_LABELS.ONLINER} → {APARTMENT_SOURCE_LABELS.KUFAR}
-							</option>
-						</select>
-					</label>
+					<Button
+						className='w-full justify-center sm:w-fit'
+						onClick={() => setIsSortFilterModalOpen(true)}
+						variant='outline'
+					>
+						<ListFilter aria-hidden className='size-4' />
+						Сортировка и фильтры
+						{activeSortFilterCount ? (
+							<span className='ml-1 rounded-full bg-[var(--primary)] px-1.5 py-0.5 text-xs font-semibold text-[var(--primary-foreground)]'>
+								{activeSortFilterCount}
+							</span>
+						) : null}
+					</Button>
 				</header>
 
 				{apartmentsQuery.isError && !hasNoActiveFilter ? (
@@ -294,6 +298,15 @@ export function ApartmentsFeed() {
 					}}
 				/>
 			) : null}
+
+			<ApartmentSortFilterModal
+				isOpen={isSortFilterModalOpen}
+				onClose={() => setIsSortFilterModalOpen(false)}
+				onSortChange={handleSortChange}
+				onSourcesChange={handleSourcesChange}
+				sort={sort}
+				sources={sources}
+			/>
 		</main>
 	)
 }
