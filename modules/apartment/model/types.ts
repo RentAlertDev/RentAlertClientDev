@@ -1,6 +1,12 @@
 export enum ApartmentSource {
 	Kufar = 'KUFAR',
+	Onliner = 'ONLINER',
 	Realt = 'REALT'
+}
+
+export enum ApartmentSortValue {
+	SourceAsc = 'source,asc',
+	SourceDesc = 'source,desc'
 }
 
 export enum ApartmentCurrency {

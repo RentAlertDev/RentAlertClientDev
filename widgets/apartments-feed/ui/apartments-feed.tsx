@@ -1,10 +1,12 @@
 'use client'
 
 import { useState } from 'react'
-import { Search, SlidersHorizontal, X } from 'lucide-react'
+import { ArrowUpDown, Search, SlidersHorizontal, X } from 'lucide-react'
 import {
+	APARTMENT_SOURCE_LABELS,
 	ApartmentCard,
 	ApartmentCardSkeleton,
+	ApartmentSortValue,
 	ApartmentsNoActiveFilter,
 	useApartments
 } from '@/modules/apartment'
@@ -37,6 +39,7 @@ const APARTMENTS_PAGE_SIZE = 10
 export function ApartmentsFeed() {
 	const [isFilterModalOpen, setIsFilterModalOpen] = useState(false)
 	const [search, setSearch] = useState('')
+	const [sort, setSort] = useState<ApartmentSortValue | ''>('')
 	const debouncedSearch = useDebouncedValue(search.trim(), 400)
 	const {
 		debouncedPage,
@@ -49,6 +52,7 @@ export function ApartmentsFeed() {
 	} = usePagination()
 	const apartmentsQuery = useApartments({
 		...(debouncedSearch ? { filter: debouncedSearch } : {}),
+		...(sort ? { sort: [sort] } : {}),
 		page: debouncedPage,
 		size: APARTMENTS_PAGE_SIZE
 	})
@@ -187,6 +191,29 @@ export function ApartmentsFeed() {
 								<X aria-hidden className='size-4' />
 							</button>
 						) : null}
+					</label>
+
+					<label className='block'>
+						<span className='mb-1.5 flex items-center gap-1 text-xs font-medium text-[var(--muted)]'>
+							<ArrowUpDown aria-hidden className='size-3.5' />
+							Сортировка
+						</span>
+						<select
+							className='h-11 w-full rounded-md border border-[var(--card-border)] bg-[var(--card)] px-3 text-sm font-medium text-[var(--foreground)] outline-none transition focus:border-[var(--ring)] sm:w-fit'
+							onChange={event => {
+								setSort(event.target.value as ApartmentSortValue | '')
+								resetPage()
+							}}
+							value={sort}
+						>
+							<option value=''>Без сортировки</option>
+							<option value={ApartmentSortValue.SourceAsc}>
+								Провайдер: {APARTMENT_SOURCE_LABELS.KUFAR} → {APARTMENT_SOURCE_LABELS.ONLINER} → {APARTMENT_SOURCE_LABELS.REALT}
+							</option>
+							<option value={ApartmentSortValue.SourceDesc}>
+								Провайдер: {APARTMENT_SOURCE_LABELS.REALT} → {APARTMENT_SOURCE_LABELS.ONLINER} → {APARTMENT_SOURCE_LABELS.KUFAR}
+							</option>
+						</select>
 					</label>
 				</header>
 
